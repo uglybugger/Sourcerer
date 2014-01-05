@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer", "Sourcerer\Sourcerer.csproj", "{8F4105F0-7A5F-4AA3-94B8-DFFDC955EC05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer.UnitTests", "Sourcerer.UnitTests\Sourcerer.UnitTests.csproj", "{137A6B56-29E0-4017-8739-3C07235A9F1A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F4105F0-7A5F-4AA3-94B8-DFFDC955EC05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F4105F0-7A5F-4AA3-94B8-DFFDC955EC05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F4105F0-7A5F-4AA3-94B8-DFFDC955EC05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F4105F0-7A5F-4AA3-94B8-DFFDC955EC05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{137A6B56-29E0-4017-8739-3C07235A9F1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{137A6B56-29E0-4017-8739-3C07235A9F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{137A6B56-29E0-4017-8739-3C07235A9F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{137A6B56-29E0-4017-8739-3C07235A9F1A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
