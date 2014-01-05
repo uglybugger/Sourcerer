@@ -37,13 +37,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="ThirdDrawer">
+      <HintPath>..\packages\ThirdDrawer.1.0.0.5\lib\net40\ThirdDrawer.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DomainConcepts\IRepository.cs" />
-    <Compile Include="Extensions\ClassExtensions.cs" />
-    <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Infrastructure\AggregateRebuilder.cs" />
     <Compile Include="DomainConcepts\Entities\AggregateRoot.cs" />
     <Compile Include="DomainConcepts\Entities\AggregateRootExtensions.cs" />
@@ -73,6 +72,7 @@
     <Compile Include="DomainConcepts\UnitOfWorkProperties.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Sourcerer.nuspec" />
   </ItemGroup>
   <ItemGroup>

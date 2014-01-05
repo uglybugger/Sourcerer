@@ -4,9 +4,9 @@ using System.Linq;
 using Sourcerer.DomainConcepts.Entities;
 using Sourcerer.DomainConcepts.Facts;
 using Sourcerer.DomainConcepts.Queries;
-using Sourcerer.Extensions;
 using Sourcerer.Infrastructure;
 using Sourcerer.Infrastructure.Time;
+using ThirdDrawer.Extensions;
 
 namespace Sourcerer.DomainConcepts
 {
