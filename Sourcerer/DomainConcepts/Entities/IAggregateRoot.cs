@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sourcerer.DomainConcepts.Facts;
 
-namespace Sourcerer.UnitTests
+namespace Sourcerer.DomainConcepts.Entities
 {
     public interface IAggregateRoot
     {

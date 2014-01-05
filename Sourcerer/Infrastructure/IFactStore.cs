@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Sourcerer.DomainConcepts.Entities;
+using Sourcerer.DomainConcepts.Facts;
 
-namespace Sourcerer.UnitTests
+namespace Sourcerer.Infrastructure
 {
     public interface IFactStore
     {
         void AppendAtomically(IFact[] facts);
 
-        IEnumerable<IFact> GetStream<T>(Guid id) where T : IAggregateRoot;
+        IEnumerable<FactAbout<T>> GetStream<T>(Guid id) where T : IAggregateRoot;
         IEnumerable<Guid> GetAllStreamIds<T>() where T : IAggregateRoot;
     }
 }
