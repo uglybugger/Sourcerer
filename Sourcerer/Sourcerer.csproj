@@ -48,7 +48,7 @@
     <Compile Include="DomainConcepts\Entities\AggregateRootExtensions.cs" />
     <Compile Include="Infrastructure\AssemblyScanningFactTypesProvider.cs" />
     <Compile Include="DomainConcepts\Entities\ChildEntity.cs" />
-    <Compile Include="Infrastructure\IEventBroker.cs" />
+    <Compile Include="Infrastructure\IDomainEventBroker.cs" />
     <Compile Include="Infrastructure\Time\IClock.cs" />
     <Compile Include="Infrastructure\Time\SystemClock.cs" />
     <Compile Include="Persistence\Disk\CustomXmlSerializer.cs" />

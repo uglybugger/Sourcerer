@@ -20,7 +20,7 @@ namespace Sourcerer.UnitTests.AggregateRebuilding
             var factStore = new MemoryFactStore();
             var aggregateRebuilder = new AggregateRebuilder(factStore);
             var queryableSnapshot = new QueryableSnapshot(factStore, aggregateRebuilder);
-            var eventBroker = Substitute.For<IEventBroker>();
+            var eventBroker = Substitute.For<IDomainEventBroker>();
 
             Guid studentId;
 

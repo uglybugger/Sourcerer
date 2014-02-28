@@ -2,7 +2,7 @@
 
 namespace Sourcerer.Infrastructure
 {
-    public interface IEventBroker
+    public interface IDomainEventBroker
     {
         void Raise<T>(T fact) where T : IFact;
     }

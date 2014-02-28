@@ -13,15 +13,15 @@ namespace Sourcerer.DomainConcepts
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IFactStore _factStore;
-        private readonly IEventBroker _eventBroker;
+        private readonly IDomainEventBroker _domainEventBroker;
         private readonly IQueryableSnapshot _snapshot;
         private readonly List<IAggregateRoot> _aggregateRootsInTransaction = new List<IAggregateRoot>();
         private readonly IClock _clock;
 
-        public UnitOfWork(IFactStore factStore, IEventBroker eventBroker, IQueryableSnapshot snapshot, IClock clock)
+        public UnitOfWork(IFactStore factStore, IDomainEventBroker domainEventBroker, IQueryableSnapshot snapshot, IClock clock)
         {
             _factStore = factStore;
-            _eventBroker = eventBroker;
+            _domainEventBroker = domainEventBroker;
             _snapshot = snapshot;
             _clock = clock;
         }
@@ -57,7 +57,7 @@ namespace Sourcerer.DomainConcepts
                 foreach (var fact in factsFromThisPass)
                 {
                     fact.SetUnitOfWorkProperties(new UnitOfWorkProperties(unitOfWorkId, sequenceNumber, _clock.UtcNow));
-                    _eventBroker.Raise((dynamic) fact);
+                    _domainEventBroker.Raise((dynamic) fact);
 
                     sequenceNumber++;
                 }
