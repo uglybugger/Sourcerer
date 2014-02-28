@@ -30,8 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NSubstitute">
+      <HintPath>..\packages\NSubstitute.1.7.1.0\lib\NET40\NSubstitute.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Shouldly">
+      <HintPath>..\packages\Shouldly.2.0.1\lib\net40\Shouldly.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,11 +48,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregateRebuilding\TestDomain\StudentAggregate\Student.cs" />
+    <Compile Include="AggregateRebuilding\TestDomain\StudentAggregate\Facts\StudentCreatedFact.cs" />
+    <Compile Include="AggregateRebuilding\TestDomain\StudentAggregate\Facts\StudentFirstNameChangedFact.cs" />
+    <Compile Include="AggregateRebuilding\TestDomain\StudentAggregate\Facts\StudentLastNameChangedFact.cs" />
+    <Compile Include="AggregateRebuilding\WhenCreatingThenRehydratingAnAggregateRoot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WhenTheTestHarnessRuns.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sourcerer\Sourcerer.csproj">
+      <Project>{8F4105F0-7A5F-4AA3-94B8-DFFDC955EC05}</Project>
+      <Name>Sourcerer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

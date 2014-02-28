@@ -64,6 +64,7 @@
     <Compile Include="DomainConcepts\Queries\IQuery.cs" />
     <Compile Include="DomainConcepts\Queries\IQueryableSnapshot.cs" />
     <Compile Include="DomainConcepts\IUnitOfWork.cs" />
+    <Compile Include="Persistence\Memory\MemoryFactStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DomainConcepts\Queries\QueryableSnapshot.cs" />
     <Compile Include="DomainConcepts\Repository.cs" />
@@ -75,9 +76,7 @@
     <None Include="packages.config" />
     <None Include="Sourcerer.nuspec" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Persistence\Memory\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

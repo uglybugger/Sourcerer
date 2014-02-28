@@ -29,7 +29,7 @@ namespace Sourcerer.DomainConcepts.Facts
 
         public string EntityTypeName
         {
-            get { return typeof (T).FullName; }
+            get { return typeof (T).AssemblyQualifiedName; }
         }
 
         public void SetUnitOfWorkProperties(UnitOfWorkProperties properties)
