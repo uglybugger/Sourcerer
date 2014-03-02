@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{137A6B56-29E0-4017-8739-3C07235A9F1A}</ProjectGuid>
+    <ProjectGuid>{0C48BA3A-0EF5-4D4F-9199-8D8491CB8EB8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sourcerer.UnitTests</RootNamespace>
-    <AssemblyName>Sourcerer.UnitTests</AssemblyName>
+    <RootNamespace>Sourcerer.SchemaUpgradeTests.v1</RootNamespace>
+    <AssemblyName>Sourcerer.SchemaUpgradeTests.v1</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,15 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NSubstitute">
-      <HintPath>..\packages\NSubstitute.1.7.1.0\lib\NET40\NSubstitute.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Shouldly">
-      <HintPath>..\packages\Shouldly.2.0.1\lib\net40\Shouldly.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,25 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AggregateRebuilding\WhenCreatingThenRehydratingAnAggregateRoot.cs" />
+    <Compile Include="Domain\StudentAggregate\Facts\StudentCreatedFact.cs" />
+    <Compile Include="Domain\StudentAggregate\Student.cs" />
+    <Compile Include="Domain\StudentAggregate\Facts\StudentChangedAddressFact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WhenTheTestHarnessRuns.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Sourcerer.SchemaUpgradeTests.v1\Sourcerer.SchemaUpgradeTests.v1.csproj">
-      <Project>{0C48BA3A-0EF5-4D4F-9199-8D8491CB8EB8}</Project>
-      <Name>Sourcerer.SchemaUpgradeTests.v1</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sourcerer\Sourcerer.csproj">
       <Project>{8F4105F0-7A5F-4AA3-94B8-DFFDC955EC05}</Project>
       <Name>Sourcerer</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AggregateRebuilding\TestDomain\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -7,7 +7,7 @@ using Sourcerer.DomainConcepts.Queries;
 using Sourcerer.Infrastructure;
 using Sourcerer.Infrastructure.Time;
 using Sourcerer.Persistence.Memory;
-using Sourcerer.UnitTests.AggregateRebuilding.TestDomain.StudentAggregate;
+using Sourcerer.SchemaUpgradeTests.v1.Domain.StudentAggregate;
 
 namespace Sourcerer.UnitTests.AggregateRebuilding
 {
