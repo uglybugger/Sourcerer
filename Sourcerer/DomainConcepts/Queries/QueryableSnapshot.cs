@@ -47,6 +47,8 @@ namespace Sourcerer.DomainConcepts.Queries
 
         public void NotifyFactsWereCommitted(IEnumerable<IFact> facts)
         {
+            //FIXME this needs a refactor - we're still rebuilding each aggregate every time someone
+            // tells us that it's changed.
             foreach (var fact in facts)
             {
                 var entityType = Type.GetType(fact.EntityTypeName);
