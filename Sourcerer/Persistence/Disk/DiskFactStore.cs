@@ -5,7 +5,8 @@ using System.Linq;
 using Sourcerer.DomainConcepts.Entities;
 using Sourcerer.DomainConcepts.Facts;
 using Sourcerer.Infrastructure;
-using ThirdDrawer.Extensions;
+using ThirdDrawer.Extensions.CollectionExtensionMethods;
+using ThirdDrawer.Extensions.StringExtensionMethods;
 
 namespace Sourcerer.Persistence.Disk
 {
@@ -13,14 +14,16 @@ namespace Sourcerer.Persistence.Disk
     {
         private readonly string _factStoreDirectoryPath;
         private readonly ICustomSerializer _serializer;
+        private readonly ITypesProvider _typesProvider;
         private readonly DirectoryInfo _factDirectoryBase;
 
         private const string _filenameSuffix = "fact.xml";
 
-        public DiskFactStore(string factStoreDirectoryPath, ICustomSerializer serializer)
+        public DiskFactStore(string factStoreDirectoryPath, ICustomSerializer serializer, ITypesProvider typesProvider)
         {
             _factStoreDirectoryPath = factStoreDirectoryPath;
             _serializer = serializer;
+            _typesProvider = typesProvider;
             _factDirectoryBase = CreateFactDirectoryBase();
         }
 
@@ -42,17 +45,17 @@ namespace Sourcerer.Persistence.Disk
             {
                 factsAndFilenames
                     .Do(kvp =>
-                    {
-                        try
                         {
-                            File.Delete(kvp.Item2);
-                        }
-                            // ReSharper disable EmptyGeneralCatchClause
-                        catch (Exception)
-                            // ReSharper restore EmptyGeneralCatchClause
-                        {
-                        }
-                    })
+                            try
+                            {
+                                File.Delete(kvp.Item2);
+                            }
+                                // ReSharper disable EmptyGeneralCatchClause
+                            catch (Exception)
+                                // ReSharper restore EmptyGeneralCatchClause
+                            {
+                            }
+                        })
                     .Done();
                 throw;
             }
@@ -60,8 +63,12 @@ namespace Sourcerer.Persistence.Disk
 
         public IEnumerable<FactAbout<T>> GetStream<T>(Guid id) where T : IAggregateRoot
         {
-            return LoadFactsFrom(GetFactDirectoryFor(typeof (T).Name, id)) //FIXME hack - use StreamName property
-                .Cast<FactAbout<T>>()
+            return GetStream(id, typeof (T)).Cast<FactAbout<T>>();
+        }
+
+        private IEnumerable<IFact> GetStream(Guid id, Type aggregateType)
+        {
+            return LoadFactsFrom(GetFactDirectoryFor(aggregateType.Name, id)) //FIXME hack - use StreamName property
                 .OrderBy(f => f.UnitOfWorkProperties.FactTimestamp)
                 .ThenBy(f => f.UnitOfWorkProperties.UnitOfWorkId)
                 .ThenBy(f => f.UnitOfWorkProperties.SequenceNumber)
@@ -70,12 +77,32 @@ namespace Sourcerer.Persistence.Disk
 
         public IEnumerable<Guid> GetAllStreamIds<T>() where T : IAggregateRoot
         {
-            var baseDirectory = GetFactDirectoryFor(typeof (T).Name);
+            return GetAllStreamIds(typeof (T));
+        }
+
+        private IEnumerable<Guid> GetAllStreamIds(Type aggregateType)
+        {
+            var baseDirectory = GetFactDirectoryFor(aggregateType.Name);
             foreach (var streamDirectory in baseDirectory.GetDirectories())
             {
                 Guid result;
                 if (Guid.TryParse(streamDirectory.Name, out result)) yield return result;
             }
+        }
+
+        public IEnumerable<IGrouping<Guid, IFact>> GetAllFactsGroupedByUnitOfWork()
+        {
+            var allFacts = from t in _typesProvider.AggregateTypes
+                           from streamId in GetAllStreamIds(t)
+                           from fact in GetStream(streamId, t)
+                           select fact;
+
+            return allFacts.GroupBy(f => f.UnitOfWorkProperties.UnitOfWorkId);
+        }
+
+        public void ImportFrom(IEnumerable<IFact> facts)
+        {
+            AppendAtomically(facts.ToArray());  //FIXME this will run out of memory once we have lots of facts.
         }
 
         private DirectoryInfo CreateFactDirectoryBase()

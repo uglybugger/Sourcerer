@@ -46,9 +46,32 @@ namespace Sourcerer.Persistence.Memory
 
         public IEnumerable<Guid> GetAllStreamIds<T>() where T : IAggregateRoot
         {
-            lock (_mutex)
+            foreach (var aggregateRootId in _streams.Keys)
             {
-                return _streams.Keys.ToArray();
+                var stream = _streams.GetOrAdd(aggregateRootId, x => new SortedList<UnitOfWorkProperties, IFact>());
+                var firstFact = stream.First();
+                var aggregateRootType = Type.GetType(firstFact.Value.EntityTypeName);
+
+                if (typeof (T).IsAssignableFrom(aggregateRootType)) yield return aggregateRootId;
+            }
+        }
+
+        public IEnumerable<IGrouping<Guid, IFact>> GetAllFactsGroupedByUnitOfWork()
+        {
+            return _streams.Values
+                           .SelectMany(stream => stream)
+                           .OrderBy(kvp => kvp.Key)
+                           .Select(kvp => kvp.Value)
+                           .GroupBy(f => f.UnitOfWorkProperties.UnitOfWorkId)
+                ;
+        }
+
+        public void ImportFrom(IEnumerable<IFact> facts)
+        {
+            foreach (var fact in facts)
+            {
+                var stream = _streams.GetOrAdd(fact.AggregateRootId, x => new SortedList<UnitOfWorkProperties, IFact>());
+                stream.Add(fact.UnitOfWorkProperties, fact);
             }
         }
     }

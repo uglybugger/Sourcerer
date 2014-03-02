@@ -37,8 +37,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="ThirdDrawer">
-      <HintPath>..\packages\ThirdDrawer.1.0.0.5\lib\net40\ThirdDrawer.dll</HintPath>
+    <Reference Include="ThirdDrawer, Version=1.0.1.4, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ThirdDrawer.1.0.1.4\lib\net40\ThirdDrawer.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -46,9 +47,11 @@
     <Compile Include="Infrastructure\AggregateRebuilder.cs" />
     <Compile Include="DomainConcepts\Entities\AggregateRoot.cs" />
     <Compile Include="DomainConcepts\Entities\AggregateRootExtensions.cs" />
-    <Compile Include="Infrastructure\AssemblyScanningFactTypesProvider.cs" />
+    <Compile Include="Infrastructure\AssemblyScanningTypesProvider.cs" />
     <Compile Include="DomainConcepts\Entities\ChildEntity.cs" />
     <Compile Include="Infrastructure\IDomainEventBroker.cs" />
+    <Compile Include="Infrastructure\Migrations\IMigrateFact.cs" />
+    <Compile Include="Infrastructure\Migrations\SchemaMigrator.cs" />
     <Compile Include="Infrastructure\Time\IClock.cs" />
     <Compile Include="Infrastructure\Time\SystemClock.cs" />
     <Compile Include="Persistence\Disk\CustomXmlSerializer.cs" />
@@ -60,7 +63,7 @@
     <Compile Include="Persistence\Disk\ICustomSerializer.cs" />
     <Compile Include="DomainConcepts\Facts\IFact.cs" />
     <Compile Include="Infrastructure\IFactStore.cs" />
-    <Compile Include="Infrastructure\IFactTypesProvider.cs" />
+    <Compile Include="Infrastructure\ITypesProvider.cs" />
     <Compile Include="DomainConcepts\Queries\IQuery.cs" />
     <Compile Include="DomainConcepts\Queries\IQueryableSnapshot.cs" />
     <Compile Include="DomainConcepts\IUnitOfWork.cs" />

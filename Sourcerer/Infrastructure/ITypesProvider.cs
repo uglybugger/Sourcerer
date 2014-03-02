@@ -2,8 +2,9 @@
 
 namespace Sourcerer.Infrastructure
 {
-    public interface IFactTypesProvider
+    public interface ITypesProvider
     {
+        Type[] AggregateTypes { get; }
         Type[] FactTypes { get; }
     }
 }

@@ -46,6 +46,7 @@ namespace Sourcerer.SchemaUpgradeTests.v1.Domain.StudentAggregate
         {
             var fact = new StudentChangedAddressFact
                        {
+                           AggregateRootId = Id,
                            StreetAddress = streetAddress,
                            Suburb = suburb,
                            State = state,

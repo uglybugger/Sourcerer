@@ -4,6 +4,7 @@ using Sourcerer.SchemaUpgradeTests.v2.Domain.AddressAggregate.Facts;
 
 namespace Sourcerer.SchemaUpgradeTests.v2.Domain.AddressAggregate
 {
+    [Serializable]
     public class Address : AggregateRoot
     {
         protected Address()
@@ -27,7 +28,7 @@ namespace Sourcerer.SchemaUpgradeTests.v2.Domain.AddressAggregate
             return address;
         }
 
-        private void Apply(AddressCreatedFact fact)
+        public void Apply(AddressCreatedFact fact)
         {
             Id = fact.AggregateRootId;
             StreetAddress = fact.StreetAddress;

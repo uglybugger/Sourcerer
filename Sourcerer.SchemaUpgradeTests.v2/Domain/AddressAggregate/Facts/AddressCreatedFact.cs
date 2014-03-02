@@ -1,8 +1,10 @@
-﻿using Sourcerer.DomainConcepts.Facts;
+﻿using System.Xml.Serialization;
+using Sourcerer.DomainConcepts.Facts;
 
 namespace Sourcerer.SchemaUpgradeTests.v2.Domain.AddressAggregate.Facts
 {
-    public class AddressCreatedFact: FactAbout<Address>
+    [XmlRoot(Namespace = "Sourcerer.SchemaUpgradeTests.Domain.StudentAggregate.Facts.v1")]
+    public class AddressCreatedFact : FactAbout<Address>
     {
         public string StreetAddress { get; set; }
         public string Suburb { get; set; }

@@ -42,6 +42,7 @@
     <Compile Include="Domain\AddressAggregate\Address.cs" />
     <Compile Include="Domain\AddressAggregate\Facts\AddressCreatedFact.cs" />
     <Compile Include="Domain\SchemaMigrations\0.0.0.1\StudentChangedAddressFact.cs" />
+    <Compile Include="Domain\SchemaMigrations\0.0.0.1\StudentChangedAddressFactMigrator.cs" />
     <Compile Include="Domain\StudentAggregate\Facts\StudentCreatedFact.cs" />
     <Compile Include="Domain\StudentAggregate\Student.cs" />
     <Compile Include="Domain\StudentAggregate\Facts\StudentChangedAddressFact.cs" />

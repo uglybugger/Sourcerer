@@ -7,6 +7,7 @@ using Sourcerer.DomainConcepts.Queries;
 using Sourcerer.Infrastructure;
 using Sourcerer.Infrastructure.Time;
 using ThirdDrawer.Extensions;
+using ThirdDrawer.Extensions.CollectionExtensionMethods;
 
 namespace Sourcerer.DomainConcepts
 {
