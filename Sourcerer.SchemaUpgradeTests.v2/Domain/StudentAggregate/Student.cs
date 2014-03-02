@@ -29,11 +29,7 @@ namespace Sourcerer.SchemaUpgradeTests.v2.Domain.StudentAggregate
 
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
-
-        public string StreetAddress { get; set; }
-        public string Suburb { get; set; }
-        public string State { get; set; }
-        public string PostCode { get; set; }
+        public Guid AddressId { get; private set; }
 
         public void Apply(StudentCreatedFact fact)
         {
@@ -42,47 +38,12 @@ namespace Sourcerer.SchemaUpgradeTests.v2.Domain.StudentAggregate
             LastName = fact.LastName;
         }
 
-        public void ChangeFirstName(string firstName)
-        {
-            var fact = new StudentFirstNameChangedFact
-                       {
-                           AggregateRootId = Id,
-                           FirstName = firstName,
-                       };
-            Append(fact);
-            Apply(fact);
-        }
-
-        public void Apply(StudentFirstNameChangedFact fact)
-        {
-            FirstName = fact.FirstName;
-        }
-
-        public void ChangeLastName(string lastName)
-        {
-            var fact = new StudentLastNameChangedFact
-                       {
-                           AggregateRootId = Id,
-                           LastName = lastName,
-                       };
-
-            Append(fact);
-            Apply(fact);
-        }
-
-        public void Apply(StudentLastNameChangedFact fact)
-        {
-            LastName = fact.LastName;
-        }
-
-        public void ChangeAddress(string streetAddress, string suburb, string state, string postcode)
+        public void ChangeAddress(Guid addressId)
         {
             var fact = new StudentChangedAddressFact
                        {
-                           StreetAddress = streetAddress,
-                           Suburb = suburb,
-                           State = state,
-                           PostCode = postcode,
+                           AggregateRootId = Id,
+                           AddressId = addressId,
                        };
 
             Append(fact);
@@ -91,10 +52,7 @@ namespace Sourcerer.SchemaUpgradeTests.v2.Domain.StudentAggregate
 
         public void Apply(StudentChangedAddressFact fact)
         {
-            StreetAddress = fact.StreetAddress;
-            Suburb = fact.Suburb;
-            State = fact.State;
-            PostCode = fact.PostCode;
+            AddressId = fact.AddressId;
         }
     }
 }

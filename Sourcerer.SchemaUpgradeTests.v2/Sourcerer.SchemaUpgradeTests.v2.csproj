@@ -39,11 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\StudentAggregate\Facts\StudentChangedAddressFact.cs" />
+    <Compile Include="Domain\AddressAggregate\Address.cs" />
+    <Compile Include="Domain\AddressAggregate\Facts\AddressCreatedFact.cs" />
+    <Compile Include="Domain\SchemaMigrations\0.0.0.1\StudentChangedAddressFact.cs" />
     <Compile Include="Domain\StudentAggregate\Facts\StudentCreatedFact.cs" />
-    <Compile Include="Domain\StudentAggregate\Facts\StudentFirstNameChangedFact.cs" />
-    <Compile Include="Domain\StudentAggregate\Facts\StudentLastNameChangedFact.cs" />
     <Compile Include="Domain\StudentAggregate\Student.cs" />
+    <Compile Include="Domain\StudentAggregate\Facts\StudentChangedAddressFact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
