@@ -43,6 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainConcepts\FactAttribute.cs" />
     <Compile Include="DomainConcepts\IRepository.cs" />
     <Compile Include="Infrastructure\AggregateRebuilder.cs" />
     <Compile Include="DomainConcepts\Entities\AggregateRoot.cs" />

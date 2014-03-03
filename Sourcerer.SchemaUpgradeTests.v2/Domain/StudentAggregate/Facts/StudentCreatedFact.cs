@@ -1,9 +1,9 @@
-using System.Xml.Serialization;
+using Sourcerer.DomainConcepts;
 using Sourcerer.DomainConcepts.Facts;
 
 namespace Sourcerer.SchemaUpgradeTests.v2.Domain.StudentAggregate.Facts
 {
-    [XmlRoot(Namespace = "Sourcerer.SchemaUpgradeTests.Domain.StudentAggregate.Facts.v1")]
+    [Fact("{A6260704-B9EC-4C74-86FD-6A4C5722D95E}")]
     public class StudentCreatedFact : FactAbout<Student>
     {
         public string FirstName { get; set; }
