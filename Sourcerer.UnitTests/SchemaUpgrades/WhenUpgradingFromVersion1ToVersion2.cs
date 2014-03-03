@@ -91,7 +91,7 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
 
             var factStoreV2 = new MemoryFactStore();
 
-            var migrator = new SchemaMigrator(factAssembliesV2);
+            var migrator = new VersionMigrator(factAssembliesV2);
             var migratedFacts = migrator.Migrate(factsV2);
             factStoreV2.ImportFrom(migratedFacts);
 

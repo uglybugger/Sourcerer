@@ -53,7 +53,7 @@
     <Compile Include="Infrastructure\IDomainEventBroker.cs" />
     <Compile Include="Infrastructure\Migrations\IMigrateFact.cs" />
     <Compile Include="Infrastructure\Migrations\MigrationContext.cs" />
-    <Compile Include="Infrastructure\Migrations\SchemaMigrator.cs" />
+    <Compile Include="Infrastructure\Migrations\VersionMigrator.cs" />
     <Compile Include="Infrastructure\Time\IClock.cs" />
     <Compile Include="Infrastructure\Time\SystemClock.cs" />
     <Compile Include="Persistence\Disk\CustomXmlSerializer.cs" />

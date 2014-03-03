@@ -7,11 +7,11 @@ using Sourcerer.DomainConcepts.Facts;
 
 namespace Sourcerer.Infrastructure.Migrations
 {
-    public class SchemaMigrator
+    public class VersionMigrator
     {
         private readonly Assembly[] _factAssemblies;
 
-        public SchemaMigrator(Assembly[] factAssemblies)
+        public VersionMigrator(Assembly[] factAssemblies)
         {
             _factAssemblies = factAssemblies;
         }
