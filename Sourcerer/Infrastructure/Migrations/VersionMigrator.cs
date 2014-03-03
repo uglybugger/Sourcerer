@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Sourcerer.DomainConcepts;
 using Sourcerer.DomainConcepts.Facts;
 
@@ -9,11 +8,11 @@ namespace Sourcerer.Infrastructure.Migrations
 {
     public class VersionMigrator
     {
-        private readonly Assembly[] _factAssemblies;
+        private readonly Type[] _factMigrators;
 
-        public VersionMigrator(Assembly[] factAssemblies)
+        public VersionMigrator(IEnumerable<Type> factMigrators )
         {
-            _factAssemblies = factAssemblies;
+            _factMigrators = factMigrators.ToArray();
         }
 
         public IEnumerable<IFact> Migrate(IEnumerable<IGrouping<Guid, IFact>> sourceUnitsOfWork)
@@ -55,8 +54,7 @@ namespace Sourcerer.Infrastructure.Migrations
         {
             var factMigratorClosedGenericType = typeof (IMigrateFact<TSourceFact>);
 
-            var factMigratorType = _factAssemblies
-                .SelectMany(a => a.GetExportedTypes())
+            var factMigratorType = _factMigrators
                 .Where(factMigratorClosedGenericType.IsAssignableFrom)
                 .FirstOrDefault();
 

@@ -102,7 +102,12 @@ namespace Sourcerer.Persistence.Disk
 
         public void ImportFrom(IEnumerable<IFact> facts)
         {
-            AppendAtomically(facts.ToArray());  //FIXME this will run out of memory once we have lots of facts.
+            AppendAtomically(facts.ToArray()); //FIXME this will run out of memory once we have lots of facts.
+        }
+
+        public bool HasFacts
+        {
+            get { return GetAllFactsGroupedByUnitOfWork().Any(); }
         }
 
         private DirectoryInfo CreateFactDirectoryBase()

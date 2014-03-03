@@ -14,6 +14,7 @@ using Sourcerer.Persistence.Disk;
 using Sourcerer.Persistence.Memory;
 using Sourcerer.SchemaUpgradeTests.v1.Domain.StudentAggregate;
 using Sourcerer.SchemaUpgradeTests.v2.Domain.AddressAggregate;
+using Sourcerer.SchemaUpgradeTests.v2.Domain.SchemaMigrations.v00001;
 
 namespace Sourcerer.UnitTests.SchemaUpgrades
 {
@@ -91,7 +92,9 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
 
             var factStoreV2 = new MemoryFactStore();
 
-            var migrator = new VersionMigrator(factAssembliesV2);
+            var migratorTypes = new[] { typeof(StudentChangedAddressFactMigrator) };
+
+            var migrator = new VersionMigrator(migratorTypes);
             var migratedFacts = migrator.Migrate(factsV2);
             factStoreV2.ImportFrom(migratedFacts);
 

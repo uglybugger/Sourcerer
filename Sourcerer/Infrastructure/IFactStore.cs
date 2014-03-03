@@ -19,5 +19,7 @@ namespace Sourcerer.Infrastructure
         IEnumerable<IGrouping<Guid, IFact>> GetAllFactsGroupedByUnitOfWork();
 
         void ImportFrom(IEnumerable<IFact> unitsOfWork);
+
+        bool HasFacts { get; }
     }
 }

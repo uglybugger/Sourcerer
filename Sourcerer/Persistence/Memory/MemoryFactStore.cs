@@ -74,5 +74,10 @@ namespace Sourcerer.Persistence.Memory
                 stream.Add(fact.UnitOfWorkProperties, fact);
             }
         }
+
+        public bool HasFacts
+        {
+            get { return GetAllFactsGroupedByUnitOfWork().Any(); }
+        }
     }
 }
