@@ -18,6 +18,8 @@ namespace Sourcerer.Infrastructure.Migrations
 
         public IEnumerable<IFact> Migrate(IEnumerable<IGrouping<Guid, IFact>> sourceUnitsOfWork)
         {
+            var context = new MigrationContext();
+
             foreach (var unitOfWork in sourceUnitsOfWork)
             {
                 var sequenceNumber = 0;
@@ -28,7 +30,7 @@ namespace Sourcerer.Infrastructure.Migrations
 
                     var resultingFacts = factMigrator == null
                         ? new[] {sourceFact}
-                        : factMigrator.Migrate(sourceFact);
+                        : factMigrator.Migrate(sourceFact, context);
 
                     foreach (var resultingFact in resultingFacts)
                     {
@@ -39,12 +41,14 @@ namespace Sourcerer.Infrastructure.Migrations
                                                        SequenceNumber = sequenceNumber,
                                                    };
                         resultingFact.SetUnitOfWorkProperties(unitOfWorkProperties);
-                        
-                        yield return resultingFact;
+
+                        context.Append(resultingFact);
                         sequenceNumber++;
                     }
                 }
             }
+
+            return context.Facts;
         }
 
         private IMigrateFact CreateFactMigrator<TSourceFact>(TSourceFact sourceFact)

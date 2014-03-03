@@ -113,7 +113,7 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
                 var wilmaAddress = addressRepository.GetById(wilma.AddressId);
                 wilmaAddress.StreetAddress.ShouldBe("123 Imaginary St");
 
-                fredAddress.Id.ShouldNotBe(wilmaAddress.Id);
+                fredAddress.Id.ShouldBe(wilmaAddress.Id);
             }
         }
     }
