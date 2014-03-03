@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Sourcerer.SchemaUpgradeTests.v2")]
+[assembly: AssemblyTitle("Sourcerer.SchemaUpgradeTests.v1")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Sourcerer.SchemaUpgradeTests.v2")]
+[assembly: AssemblyProduct("Sourcerer.SchemaUpgradeTests.v1")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b84a1509-cd71-487d-8a9f-6308c208d9dc")]
+[assembly: Guid("d34bd214-5fc2-46a4-8a24-e6b9fead5f58")]
 
 // Version information for an assembly consists of the following four values:
 //

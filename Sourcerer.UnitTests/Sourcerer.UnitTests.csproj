@@ -50,19 +50,24 @@
   <ItemGroup>
     <Compile Include="AggregateRebuilding\WhenCreatingThenRehydratingAnAggregateRoot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SchemaUpgrades\WhenUpgradingFromVersion1ToVersion2.cs" />
+    <Compile Include="SchemaUpgrades\WhenUpgradingFromVersion0ToVersion2.cs" />
+    <Compile Include="SchemaUpgrades\WhenUpgradingFromVersion0ToVersion1.cs" />
     <Compile Include="WhenTheTestHarnessRuns.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sourcerer.SchemaUpgradeTests.v1\Sourcerer.SchemaUpgradeTests.v1.csproj">
+    <ProjectReference Include="..\Sourcerer.SchemaUpgradeTests.v0\Sourcerer.SchemaUpgradeTests.v0.csproj">
       <Project>{0C48BA3A-0EF5-4D4F-9199-8D8491CB8EB8}</Project>
+      <Name>Sourcerer.SchemaUpgradeTests.v0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sourcerer.SchemaUpgradeTests.v1\Sourcerer.SchemaUpgradeTests.v1.csproj">
+      <Project>{333ceedc-b74c-4e81-bbf8-33f52f6f5c7c}</Project>
       <Name>Sourcerer.SchemaUpgradeTests.v1</Name>
     </ProjectReference>
     <ProjectReference Include="..\Sourcerer.SchemaUpgradeTests.v2\Sourcerer.SchemaUpgradeTests.v2.csproj">
-      <Project>{333ceedc-b74c-4e81-bbf8-33f52f6f5c7c}</Project>
+      <Project>{fa375fa3-3c38-4a7b-a11f-bdeb2a591315}</Project>
       <Name>Sourcerer.SchemaUpgradeTests.v2</Name>
     </ProjectReference>
     <ProjectReference Include="..\Sourcerer\Sourcerer.csproj">

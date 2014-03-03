@@ -7,9 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer", "Sourcerer\Sour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer.UnitTests", "Sourcerer.UnitTests\Sourcerer.UnitTests.csproj", "{137A6B56-29E0-4017-8739-3C07235A9F1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer.SchemaUpgradeTests.v1", "Sourcerer.SchemaUpgradeTests.v1\Sourcerer.SchemaUpgradeTests.v1.csproj", "{0C48BA3A-0EF5-4D4F-9199-8D8491CB8EB8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer.SchemaUpgradeTests.v0", "Sourcerer.SchemaUpgradeTests.v0\Sourcerer.SchemaUpgradeTests.v0.csproj", "{0C48BA3A-0EF5-4D4F-9199-8D8491CB8EB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer.SchemaUpgradeTests.v2", "Sourcerer.SchemaUpgradeTests.v2\Sourcerer.SchemaUpgradeTests.v2.csproj", "{333CEEDC-B74C-4E81-BBF8-33F52F6F5C7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer.SchemaUpgradeTests.v1", "Sourcerer.SchemaUpgradeTests.v1\Sourcerer.SchemaUpgradeTests.v1.csproj", "{333CEEDC-B74C-4E81-BBF8-33F52F6F5C7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer.SchemaUpgradeTests.v2", "Sourcerer.SchemaUpgradeTests.v2\Sourcerer.SchemaUpgradeTests.v2.csproj", "{FA375FA3-3C38-4A7B-A11F-BDEB2A591315}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{333CEEDC-B74C-4E81-BBF8-33F52F6F5C7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{333CEEDC-B74C-4E81-BBF8-33F52F6F5C7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{333CEEDC-B74C-4E81-BBF8-33F52F6F5C7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA375FA3-3C38-4A7B-A11F-BDEB2A591315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA375FA3-3C38-4A7B-A11F-BDEB2A591315}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA375FA3-3C38-4A7B-A11F-BDEB2A591315}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA375FA3-3C38-4A7B-A11F-BDEB2A591315}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
@@ -12,19 +11,19 @@ using Sourcerer.Infrastructure.Migrations;
 using Sourcerer.Infrastructure.Time;
 using Sourcerer.Persistence.Disk;
 using Sourcerer.Persistence.Memory;
-using Sourcerer.SchemaUpgradeTests.v1.Domain.StudentAggregate;
-using Sourcerer.SchemaUpgradeTests.v2.Domain.AddressAggregate;
-using Sourcerer.SchemaUpgradeTests.v2.Domain.SchemaMigrations.v00001;
+using Sourcerer.SchemaUpgradeTests.v0.Domain.StudentAggregate;
+using Sourcerer.SchemaUpgradeTests.v1.Domain.AddressAggregate;
+using Sourcerer.SchemaUpgradeTests.v1.Domain.SchemaMigrations.v00001;
 
 namespace Sourcerer.UnitTests.SchemaUpgrades
 {
     [TestFixture]
-    public class WhenUpgradingFromVersion1ToVersion2
+    public class WhenUpgradingFromVersion0ToVersion1
     {
         [Test]
         public void NothingShouldGoBang()
         {
-            var factAssembliesV1 = new[]
+            var factAssembliesV0 = new[]
                                    {
                                        typeof (Student).Assembly
                                    };
@@ -35,16 +34,16 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
             var eventBroker = Substitute.For<IDomainEventBroker>();
             var systemClock = new SystemClock();
 
-            var typesProviderV1 = new AssemblyScanningTypesProvider(factAssembliesV1);
-            var serializerV1 = new CustomXmlSerializer(typesProviderV1);
-            var factStoreV1 = new MemoryFactStore();
-            var aggregateRebuilderV1 = new AggregateRebuilder(factStoreV1);
-            var queryableSnapshotV1 = new QueryableSnapshot(factStoreV1, aggregateRebuilderV1);
+            var typesProviderV0 = new AssemblyScanningTypesProvider(factAssembliesV0);
+            var serializerV0 = new CustomXmlSerializer(typesProviderV0);
+            var factStoreV0 = new MemoryFactStore();
+            var aggregateRebuilderV0 = new AggregateRebuilder(factStoreV0);
+            var queryableSnapshotV0 = new QueryableSnapshot(factStoreV0, aggregateRebuilderV0);
 
-            // Create student in version 1 of schema
-            using (var unitOfWork = new UnitOfWork(factStoreV1, eventBroker, queryableSnapshotV1, systemClock))
+            // Create student in version 0 of schema
+            using (var unitOfWork = new UnitOfWork(factStoreV0, eventBroker, queryableSnapshotV0, systemClock))
             {
-                var repository = new Repository<Student>(unitOfWork, queryableSnapshotV1);
+                var repository = new Repository<Student>(unitOfWork, queryableSnapshotV0);
 
                 var fred = Student.Create("Fred", "Flintstone");
 
@@ -57,9 +56,9 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
                 unitOfWork.Commit();
             }
 
-            using (var unitOfWork = new UnitOfWork(factStoreV1, eventBroker, queryableSnapshotV1, systemClock))
+            using (var unitOfWork = new UnitOfWork(factStoreV0, eventBroker, queryableSnapshotV0, systemClock))
             {
-                var repository = new Repository<Student>(unitOfWork, queryableSnapshotV1);
+                var repository = new Repository<Student>(unitOfWork, queryableSnapshotV0);
 
                 var wilma = Student.Create("Wilma", "Flintstone");
 
@@ -72,40 +71,40 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
                 unitOfWork.Commit();
             }
 
-            // Upgrade schema to version 2
+            // Upgrade schema to version 1
 
-            var factAssembliesV2 = new[]
+            var factAssembliesV1 = new[]
                                    {
                                        typeof (SchemaUpgradeTests.v2.Domain.StudentAggregate.Student).Assembly
                                    };
-            var typesProviderV2 = new AssemblyScanningTypesProvider(factAssembliesV2);
-            var serializerV2 = new CustomXmlSerializer(typesProviderV2);
+            var typesProviderV1 = new AssemblyScanningTypesProvider(factAssembliesV1);
+            var serializerV1 = new CustomXmlSerializer(typesProviderV1);
 
             // we don't do this for realsies - we're simulating two different appdomains' having
             // persisted and then rehydrated our fact objects.
-            var factsV2 = factStoreV1.GetAllFactsGroupedByUnitOfWork()
-                .SelectMany(uow => uow)
-                .Select(serializerV1.Serialize)
-                .Select(serializerV2.Deserialize<IFact>)
-                .GroupBy(f => f.UnitOfWorkProperties.UnitOfWorkId)
-                .ToArray();
+            var factsV1 = factStoreV0.GetAllFactsGroupedByUnitOfWork()
+                                     .SelectMany(uow => uow)
+                                     .Select(serializerV0.Serialize)
+                                     .Select(serializerV1.Deserialize<IFact>)
+                                     .GroupBy(f => f.UnitOfWorkProperties.UnitOfWorkId)
+                                     .ToArray();
 
-            var factStoreV2 = new MemoryFactStore();
+            var factStoreV1 = new MemoryFactStore();
 
-            var migratorTypes = new[] { typeof(StudentChangedAddressFactMigrator) };
+            var migratorTypes = new[] {typeof (StudentChangedAddressFactMigrator)};
 
             var migrator = new VersionMigrator(migratorTypes);
-            var migratedFacts = migrator.Migrate(factsV2);
-            factStoreV2.ImportFrom(migratedFacts);
+            var migratedFacts = migrator.Migrate(factsV1);
+            factStoreV1.ImportFrom(migratedFacts);
 
-            var aggregateRebuilderV2 = new AggregateRebuilder(factStoreV2);
-            var queryableSnapshotV2 = new QueryableSnapshot(factStoreV2, aggregateRebuilderV2);
+            var aggregateRebuilderV1 = new AggregateRebuilder(factStoreV1);
+            var queryableSnapshotV1 = new QueryableSnapshot(factStoreV1, aggregateRebuilderV1);
 
             // Assert that our changes have come across correctly
-            using (var unitOfWork = new UnitOfWork(factStoreV2, eventBroker, queryableSnapshotV2, systemClock))
+            using (var unitOfWork = new UnitOfWork(factStoreV1, eventBroker, queryableSnapshotV1, systemClock))
             {
-                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, queryableSnapshotV2);
-                var addressRepository = new Repository<Address>(unitOfWork, queryableSnapshotV2);
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, queryableSnapshotV1);
+                var addressRepository = new Repository<Address>(unitOfWork, queryableSnapshotV1);
 
                 var fred = studentRepository.GetById(fredId);
                 var wilma = studentRepository.GetById(wilmaId);
@@ -120,6 +119,4 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
             }
         }
     }
-
-   
 }

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0C48BA3A-0EF5-4D4F-9199-8D8491CB8EB8}</ProjectGuid>
+    <ProjectGuid>{333CEEDC-B74C-4E81-BBF8-33F52F6F5C7C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sourcerer.SchemaUpgradeTests.v1</RootNamespace>
@@ -39,6 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\AddressAggregate\Address.cs" />
+    <Compile Include="Domain\AddressAggregate\Facts\AddressCreatedFact.cs" />
+    <Compile Include="Domain\SchemaMigrations\v00001\StudentChangedAddressFact.cs" />
+    <Compile Include="Domain\SchemaMigrations\v00001\StudentChangedAddressFactMigrator.cs" />
     <Compile Include="Domain\StudentAggregate\Facts\StudentCreatedFact.cs" />
     <Compile Include="Domain\StudentAggregate\Student.cs" />
     <Compile Include="Domain\StudentAggregate\Facts\StudentChangedAddressFact.cs" />
