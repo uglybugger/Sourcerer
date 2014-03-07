@@ -38,7 +38,7 @@ namespace Sourcerer
             var aggregateRebuilder = new AggregateRebuilder(FactStore);
             var queryableSnapshot = new QueryableSnapshot(FactStore, aggregateRebuilder);
             var domainEventBroker = new DomainEventBroker(DependencyResolver);
-            SourcererFactory.Configure(FactStore, domainEventBroker, aggregateRebuilder, queryableSnapshot, Clock);
+            SourcererFactory.Configure(FactStore, domainEventBroker, queryableSnapshot, Clock);
         }
     }
 }

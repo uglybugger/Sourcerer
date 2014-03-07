@@ -10,19 +10,13 @@ namespace Sourcerer
     {
         private static IFactStore _factStore;
         private static IDomainEventBroker _domainEventBroker;
-        private static IAggregateRebuilder _aggregateRebuilder;
         private static IQueryableSnapshot _queryableSnapshot;
         private static IClock _clock;
 
-        internal static void Configure(IFactStore factStore,
-                                       IDomainEventBroker domainEventBroker,
-                                       IAggregateRebuilder aggregateRebuilder,
-                                       IQueryableSnapshot queryableSnapshot,
-                                       IClock clock)
+        internal static void Configure(IFactStore factStore, IDomainEventBroker domainEventBroker, IQueryableSnapshot queryableSnapshot, IClock clock)
         {
             _factStore = factStore;
             _domainEventBroker = domainEventBroker;
-            _aggregateRebuilder = aggregateRebuilder;
             _queryableSnapshot = queryableSnapshot;
             _clock = clock;
         }
