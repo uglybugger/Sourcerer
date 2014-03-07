@@ -18,10 +18,21 @@ using Sourcerer.SchemaUpgradeTests.v2.Domain.AddressAggregate;
 namespace Sourcerer.UnitTests.SchemaUpgrades
 {
     [TestFixture]
-    public class WhenUpgradingFromVersion0ToVersion2
+    public class WhenUpgradingFromVersion0ToVersion2 : TestFor<SchemaMigrator>
     {
-        [Test]
-        public void NothingShouldGoBang()
+        private Guid _fredId;
+        private Guid _wilmaId;
+        private SchemaMigrator _schemaMigrator;
+        private TestHarnessMemoryFactStore _factStoreV0;
+        private TestHarnessMemoryFactStore _factStoreV1;
+        private TestHarnessMemoryFactStore _factStoreV2;
+        private IFactStoreFactory _factStoreFactory;
+        private IDomainEventBroker _domainEventBroker;
+        private SystemClock _systemClock;
+        private AggregateRebuilder _aggregateRebuilderV2;
+        private QueryableSnapshot _queryableSnapshotV2;
+
+        protected override void Given()
         {
             var factAssembliesV0 = new[]
                                    {
@@ -37,11 +48,8 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
                                        typeof (SchemaUpgradeTests.v2.Domain.StudentAggregate.Student).Assembly
                                    };
 
-            Guid fredId;
-            Guid wilmaId;
-
-            var eventBroker = Substitute.For<IDomainEventBroker>();
-            var systemClock = new SystemClock();
+            _domainEventBroker = Substitute.For<IDomainEventBroker>();
+            _systemClock = new SystemClock();
 
             var typesProviderV0 = new AssemblyScanningTypesProvider(factAssembliesV0);
             var serializerV0 = new CustomXmlSerializer(typesProviderV0);
@@ -52,21 +60,20 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
             var typesProviderV2 = new AssemblyScanningTypesProvider(factAssembliesV2);
             var serializerV2 = new CustomXmlSerializer(typesProviderV2);
 
-            var factStoreV0 = new TestHarnessMemoryFactStore(serializerV0, serializerV2);
-            var factStoreV1 = new TestHarnessMemoryFactStore(serializerV2, serializerV2);
-            var factStoreV2 = new TestHarnessMemoryFactStore(serializerV2, serializerV2);
+            _factStoreV0 = new TestHarnessMemoryFactStore(serializerV0, serializerV2);
+            _factStoreV1 = new TestHarnessMemoryFactStore(serializerV2, serializerV2);
+            _factStoreV2 = new TestHarnessMemoryFactStore(serializerV2, serializerV2);
 
-            var factStoreFactory = Substitute.For<IFactStoreFactory>();
-            factStoreFactory.GetFactStore(0).Returns(factStoreV0);
-            factStoreFactory.GetFactStore(1).Returns(factStoreV1);
-            factStoreFactory.GetFactStore(2).Returns(factStoreV2);
+            _factStoreFactory = Substitute.For<IFactStoreFactory>();
+            _factStoreFactory.GetFactStore(0).Returns(_factStoreV0);
+            _factStoreFactory.GetFactStore(1).Returns(_factStoreV1);
+            _factStoreFactory.GetFactStore(2).Returns(_factStoreV2);
 
-
-            var aggregateRebuilderV0 = new AggregateRebuilder(factStoreV0);
-            var queryableSnapshotV0 = new QueryableSnapshot(factStoreV0, aggregateRebuilderV0);
+            var aggregateRebuilderV0 = new AggregateRebuilder(_factStoreV0);
+            var queryableSnapshotV0 = new QueryableSnapshot(_factStoreV0, aggregateRebuilderV0);
 
             // Create student in version 0 of schema
-            using (var unitOfWork = new UnitOfWork(factStoreV0, eventBroker, queryableSnapshotV0, systemClock))
+            using (var unitOfWork = new UnitOfWork(_factStoreV0, _domainEventBroker, queryableSnapshotV0, _systemClock))
             {
                 var repository = new Repository<Student>(unitOfWork, queryableSnapshotV0);
 
@@ -75,13 +82,13 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
                 // Make a change that will be refactored out in version 2
                 fred.ChangeAddress("123 Imaginary St", "Bedrock", "BR", "65000000");
 
-                fredId = fred.Id;
+                _fredId = fred.Id;
                 repository.Add(fred);
 
                 unitOfWork.Commit();
             }
 
-            using (var unitOfWork = new UnitOfWork(factStoreV0, eventBroker, queryableSnapshotV0, systemClock))
+            using (var unitOfWork = new UnitOfWork(_factStoreV0, _domainEventBroker, queryableSnapshotV0, _systemClock))
             {
                 var repository = new Repository<Student>(unitOfWork, queryableSnapshotV0);
 
@@ -90,49 +97,136 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
                 // Make a change that will be refactored out in version 2
                 wilma.ChangeAddress("123 Imaginary St", "Bedrock", "BR", "65000000");
 
-                wilmaId = wilma.Id;
+                _wilmaId = wilma.Id;
                 repository.Add(wilma);
 
                 unitOfWork.Commit();
             }
 
-            // Upgrade schema to version 2 via the SchemaMigrator
-
-
-
-            var schemaMigrator = new SchemaMigrator(factAssembliesV2,
-                                                    t => t.Namespace.Contains("SchemaMigrations"),
-                                                    t => int.Parse(t.Namespace.Split('.').Last().TrimStart('v')),
-                                                    factStoreFactory
+            _schemaMigrator = new SchemaMigrator(factAssembliesV2,
+                                                 t => t.Namespace.Contains("SchemaMigrations"),
+                                                 t => int.Parse(t.Namespace.Split('.').Last().TrimStart('v')),
+                                                 _factStoreFactory
                 );
-            schemaMigrator.DoYourThing();
+            _aggregateRebuilderV2 = new AggregateRebuilder(_factStoreV2);
+            _queryableSnapshotV2 = new QueryableSnapshot(_factStoreV2, _aggregateRebuilderV2);
+        }
 
-            var aggregateRebuilderV2 = new AggregateRebuilder(factStoreV2);
-            var queryableSnapshotV2 = new QueryableSnapshot(factStoreV2, aggregateRebuilderV2);
+        protected override void When()
+        {
+            _schemaMigrator.DoYourThing();
+        }
 
-            // Assert that our changes have come across correctly
-            using (var unitOfWork = new UnitOfWork(factStoreV2, eventBroker, queryableSnapshotV2, systemClock))
+        [Test]
+        public void FredShouldExist()
+        {
+            using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _queryableSnapshotV2, _systemClock))
             {
-                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, queryableSnapshotV2);
-                var addressRepository = new Repository<Address>(unitOfWork, queryableSnapshotV2);
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, _queryableSnapshotV2);
+                var fred = studentRepository.GetById(_fredId);
+                fred.ShouldNotBe(null);
+            }
+        }
 
-                var fred = studentRepository.GetById(fredId);
-                var wilma = studentRepository.GetById(wilmaId);
-
+        [Test]
+        public void FredsGivenNameShouldBeCorrect()
+        {
+            using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _queryableSnapshotV2, _systemClock))
+            {
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, _queryableSnapshotV2);
+                var fred = studentRepository.GetById(_fredId);
                 fred.GivenName.ShouldBe("Fred");
+            }
+        }
+
+        [Test]
+        public void FredsFamilyNameShouldBeCorrect()
+        {
+            using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _queryableSnapshotV2, _systemClock))
+            {
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, _queryableSnapshotV2);
+                var fred = studentRepository.GetById(_fredId);
                 fred.FamilyName.ShouldBe("Flintstone");
+            }
+        }
 
+        [Test]
+        public void WilmaShouldExist()
+        {
+            using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _queryableSnapshotV2, _systemClock))
+            {
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, _queryableSnapshotV2);
+                var wilma = studentRepository.GetById(_wilmaId);
+                wilma.ShouldNotBe(null);
+            }
+        }
+
+        [Test]
+        public void WilmasGivenNameShouldBeCorrect()
+        {
+            using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _queryableSnapshotV2, _systemClock))
+            {
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, _queryableSnapshotV2);
+                var wilma = studentRepository.GetById(_wilmaId);
                 wilma.GivenName.ShouldBe("Wilma");
-                wilma.FamilyName.ShouldBe("Flintstone");
+            }
+        }
 
+        [Test]
+        public void WilmasFamilyNameShouldBeCorrect()
+        {
+            using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _queryableSnapshotV2, _systemClock))
+            {
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, _queryableSnapshotV2);
+                var wilma = studentRepository.GetById(_wilmaId);
+                wilma.FamilyName.ShouldBe("Flintstone");
+            }
+        }
+
+        [Test]
+        public void FredsAddressShouldBeCorrect()
+        {
+            using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _queryableSnapshotV2, _systemClock))
+            {
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, _queryableSnapshotV2);
+                var addressRepository = new Repository<Address>(unitOfWork, _queryableSnapshotV2);
+
+                var fred = studentRepository.GetById(_fredId);
                 var fredAddress = addressRepository.GetById(fred.AddressId);
                 fredAddress.StreetAddress.ShouldBe("123 Imaginary St");
+            }
+        }
 
+        [Test]
+        public void FredAndWilmaShouldLiveAtTheSameAddressInstance()
+        {
+            using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _queryableSnapshotV2, _systemClock))
+            {
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(unitOfWork, _queryableSnapshotV2);
+                var addressRepository = new Repository<Address>(unitOfWork, _queryableSnapshotV2);
+
+                var fred = studentRepository.GetById(_fredId);
+                var wilma = studentRepository.GetById(_wilmaId);
+
+                var fredAddress = addressRepository.GetById(fred.AddressId);
                 var wilmaAddress = addressRepository.GetById(wilma.AddressId);
-                wilmaAddress.StreetAddress.ShouldBe("123 Imaginary St");
 
                 fredAddress.Id.ShouldBe(wilmaAddress.Id);
             }
+        }
+    }
+
+    [TestFixture]
+    public abstract class TestFor<T>
+    {
+        protected abstract void Given();
+        protected abstract void When();
+
+        [SetUp]
+        public void SetUp()
+        {
+            Given();
+            When();
         }
     }
 
