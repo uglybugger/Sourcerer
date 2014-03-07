@@ -43,6 +43,8 @@
     <Compile Include="Domain\AddressAggregate\Facts\AddressCreatedFact.cs" />
     <Compile Include="Domain\SchemaMigrations\v00001\StudentChangedAddressFact.cs" />
     <Compile Include="Domain\SchemaMigrations\v00001\StudentChangedAddressFactMigrator.cs" />
+    <Compile Include="Domain\SchemaMigrations\v00002\StudentCreatedFact.cs" />
+    <Compile Include="Domain\SchemaMigrations\v00002\StudentCreatedFactMigrator.cs" />
     <Compile Include="Domain\StudentAggregate\Facts\StudentChangedAddressFact.cs" />
     <Compile Include="Domain\StudentAggregate\Facts\StudentCreatedFact.cs" />
     <Compile Include="Domain\StudentAggregate\Student.cs" />
@@ -54,6 +56,7 @@
       <Name>Sourcerer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

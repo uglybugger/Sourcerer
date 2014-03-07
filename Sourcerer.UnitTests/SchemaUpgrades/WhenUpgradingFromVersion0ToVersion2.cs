@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
 using Sourcerer.DomainConcepts;
+using Sourcerer.DomainConcepts.Facts;
 using Sourcerer.DomainConcepts.Queries;
 using Sourcerer.Infrastructure;
 using Sourcerer.Infrastructure.Migrations;
@@ -26,6 +28,15 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
                                        typeof (Student).Assembly
                                    };
 
+            var factAssembliesV1 = new[]
+                                   {
+                                       typeof (SchemaUpgradeTests.v1.Domain.StudentAggregate.Student).Assembly
+                                   };
+            var factAssembliesV2 = new[]
+                                   {
+                                       typeof (SchemaUpgradeTests.v2.Domain.StudentAggregate.Student).Assembly
+                                   };
+
             Guid fredId;
             Guid wilmaId;
 
@@ -34,7 +45,23 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
 
             var typesProviderV0 = new AssemblyScanningTypesProvider(factAssembliesV0);
             var serializerV0 = new CustomXmlSerializer(typesProviderV0);
-            var factStoreV0 = new MemoryFactStore();
+
+            var typesProviderV1 = new AssemblyScanningTypesProvider(factAssembliesV1);
+            var serializerV1 = new CustomXmlSerializer(typesProviderV1);
+
+            var typesProviderV2 = new AssemblyScanningTypesProvider(factAssembliesV2);
+            var serializerV2 = new CustomXmlSerializer(typesProviderV2);
+
+            var factStoreV0 = new TestHarnessMemoryFactStore(serializerV0, serializerV2);
+            var factStoreV1 = new TestHarnessMemoryFactStore(serializerV2, serializerV2);
+            var factStoreV2 = new TestHarnessMemoryFactStore(serializerV2, serializerV2);
+
+            var factStoreFactory = Substitute.For<IFactStoreFactory>();
+            factStoreFactory.GetFactStore(0).Returns(factStoreV0);
+            factStoreFactory.GetFactStore(1).Returns(factStoreV1);
+            factStoreFactory.GetFactStore(2).Returns(factStoreV2);
+
+
             var aggregateRebuilderV0 = new AggregateRebuilder(factStoreV0);
             var queryableSnapshotV0 = new QueryableSnapshot(factStoreV0, aggregateRebuilderV0);
 
@@ -71,20 +98,9 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
 
             // Upgrade schema to version 2 via the SchemaMigrator
 
-            var factAssembliesV3 = new[]
-                                   {
-                                       typeof (SchemaUpgradeTests.v2.Domain.StudentAggregate.Student).Assembly
-                                   };
 
-#error need to use a TestHarnessMemoryFactStore that will serialize/deserialize to/from XML when we extract all the facts so that we can map between versions easily.
-            var factStoreFactory = Substitute.For<IFactStoreFactory>();
-            factStoreFactory.GetFactStore(0).Returns(factStoreV0);
-            var factStoreV1 = new MemoryFactStore();
-            factStoreFactory.GetFactStore(1).Returns(factStoreV1);
-            var factStoreV2 = new MemoryFactStore();
-            factStoreFactory.GetFactStore(2).Returns(factStoreV2);
 
-            var schemaMigrator = new SchemaMigrator(factAssembliesV3,
+            var schemaMigrator = new SchemaMigrator(factAssembliesV2,
                                                     t => t.Namespace.Contains("SchemaMigrations"),
                                                     t => int.Parse(t.Namespace.Split('.').Last().TrimStart('v')),
                                                     factStoreFactory
@@ -103,6 +119,12 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
                 var fred = studentRepository.GetById(fredId);
                 var wilma = studentRepository.GetById(wilmaId);
 
+                fred.GivenName.ShouldBe("Fred");
+                fred.FamilyName.ShouldBe("Flintstone");
+
+                wilma.GivenName.ShouldBe("Wilma");
+                wilma.FamilyName.ShouldBe("Flintstone");
+
                 var fredAddress = addressRepository.GetById(fred.AddressId);
                 fredAddress.StreetAddress.ShouldBe("123 Imaginary St");
 
@@ -111,6 +133,27 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
 
                 fredAddress.Id.ShouldBe(wilmaAddress.Id);
             }
+        }
+    }
+
+    internal class TestHarnessMemoryFactStore : MemoryFactStore
+    {
+        private readonly CustomXmlSerializer _serializer;
+        private readonly CustomXmlSerializer _deserializer;
+
+        public TestHarnessMemoryFactStore(CustomXmlSerializer serializer, CustomXmlSerializer deserializer)
+        {
+            _serializer = serializer;
+            _deserializer = deserializer;
+        }
+
+        public override IEnumerable<IGrouping<Guid, IFact>> GetAllFactsGroupedByUnitOfWork()
+        {
+            return base.GetAllFactsGroupedByUnitOfWork()
+                       .SelectMany(uow => uow)
+                       .Select(fact => _serializer.Serialize(fact))
+                       .Select(xml => _deserializer.Deserialize<IFact>(xml))
+                       .GroupBy(fact => fact.UnitOfWorkProperties.UnitOfWorkId);
         }
     }
 }

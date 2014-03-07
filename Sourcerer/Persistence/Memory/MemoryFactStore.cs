@@ -56,7 +56,7 @@ namespace Sourcerer.Persistence.Memory
             }
         }
 
-        public IEnumerable<IGrouping<Guid, IFact>> GetAllFactsGroupedByUnitOfWork()
+        public virtual IEnumerable<IGrouping<Guid, IFact>> GetAllFactsGroupedByUnitOfWork()
         {
             return _streams.Values
                            .SelectMany(stream => stream)
@@ -66,7 +66,7 @@ namespace Sourcerer.Persistence.Memory
                 ;
         }
 
-        public void ImportFrom(IEnumerable<IFact> facts)
+        public virtual void ImportFrom(IEnumerable<IFact> facts)
         {
             foreach (var fact in facts)
             {

@@ -31,16 +31,17 @@ namespace Sourcerer.Infrastructure.Migrations
             var versionMigrations = factMigratorTypes
                 .GroupBy(t => _versionNumberFunc(t))
                 .OrderBy(kvp => kvp.Key)
-                .ToArray();
+                .ToDictionary(grouping => grouping.Key, grouping => grouping);
 
-            for (var schemaVersion = 1; schemaVersion < versionMigrations.Max(kvp => kvp.Key); schemaVersion++)
+            for (var schemaVersion = 1; schemaVersion <= versionMigrations.Max(kvp => kvp.Key); schemaVersion++)
             {
                 var oldFactStore = _factStoreFactory.GetFactStore(schemaVersion - 1);
                 var newFactStore = _factStoreFactory.GetFactStore(schemaVersion);
 
                 if (newFactStore.HasFacts) continue;
 
-                var versionMigrator = new VersionMigrator(versionMigrations[schemaVersion]);
+                var versionMigration = versionMigrations[schemaVersion];
+                var versionMigrator = new VersionMigrator(versionMigration);
                 var oldFacts = oldFactStore.GetAllFactsGroupedByUnitOfWork();
                 var migratedFacts = versionMigrator.Migrate(oldFacts);
                 newFactStore.ImportFrom(migratedFacts);

@@ -13,8 +13,8 @@ namespace Sourcerer.SchemaUpgradeTests.v2.Domain.StudentAggregate
             var createdFact = new StudentCreatedFact
                               {
                                   AggregateRootId = id,
-                                  FirstName = firstName,
-                                  LastName = lastName,
+                                  GivenName = firstName,
+                                  FamilyName = lastName,
                               };
             var student = new Student();
             student.Append(createdFact);
@@ -27,15 +27,15 @@ namespace Sourcerer.SchemaUpgradeTests.v2.Domain.StudentAggregate
         {
         }
 
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
+        public string GivenName { get; private set; }
+        public string FamilyName { get; private set; }
         public Guid AddressId { get; private set; }
 
         public void Apply(StudentCreatedFact fact)
         {
             Id = fact.AggregateRootId;
-            FirstName = fact.FirstName;
-            LastName = fact.LastName;
+            GivenName = fact.GivenName;
+            FamilyName = fact.FamilyName;
         }
 
         public void ChangeAddress(Guid addressId)

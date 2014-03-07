@@ -3,10 +3,10 @@ using Sourcerer.DomainConcepts.Facts;
 
 namespace Sourcerer.SchemaUpgradeTests.v2.Domain.StudentAggregate.Facts
 {
-    [Fact("{A6260704-B9EC-4C74-86FD-6A4C5722D95E}")]
+    [Fact("{BC08F046-12B9-443B-9B58-886218630209}")]
     public class StudentCreatedFact : FactAbout<Student>
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string GivenName { get; set; }
+        public string FamilyName { get; set; }
     }
 }
