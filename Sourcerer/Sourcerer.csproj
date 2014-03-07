@@ -43,6 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultDependencyResolver.cs" />
     <Compile Include="DomainConcepts\FactAttribute.cs" />
     <Compile Include="DomainConcepts\IRepository.cs" />
     <Compile Include="Infrastructure\AggregateRebuilder.cs" />
@@ -50,12 +51,16 @@
     <Compile Include="DomainConcepts\Entities\AggregateRootExtensions.cs" />
     <Compile Include="Infrastructure\AssemblyScanningTypesProvider.cs" />
     <Compile Include="DomainConcepts\Entities\ChildEntity.cs" />
+    <Compile Include="Infrastructure\DomainEventBroker.cs" />
+    <Compile Include="Infrastructure\IDependencyResolver.cs" />
     <Compile Include="Infrastructure\IDomainEventBroker.cs" />
+    <Compile Include="Infrastructure\IHandleFact.cs" />
     <Compile Include="Infrastructure\Migrations\IFactStoreFactory.cs" />
     <Compile Include="Infrastructure\Migrations\IMigrateFact.cs" />
     <Compile Include="Infrastructure\Migrations\MigrationContext.cs" />
     <Compile Include="Infrastructure\Migrations\SchemaMigrator.cs" />
     <Compile Include="Infrastructure\Migrations\VersionMigrator.cs" />
+    <Compile Include="Infrastructure\OwnedComponent.cs" />
     <Compile Include="Infrastructure\Time\IClock.cs" />
     <Compile Include="Infrastructure\Time\SystemClock.cs" />
     <Compile Include="Persistence\Disk\CustomXmlSerializer.cs" />
@@ -78,6 +83,8 @@
     <Compile Include="Persistence\Disk\SerializationWrapper.cs" />
     <Compile Include="DomainConcepts\UnitOfWork.cs" />
     <Compile Include="DomainConcepts\UnitOfWorkProperties.cs" />
+    <Compile Include="SourcererConfigurator.cs" />
+    <Compile Include="SourcererFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

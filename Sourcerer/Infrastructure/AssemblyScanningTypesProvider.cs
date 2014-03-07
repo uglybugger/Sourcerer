@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Sourcerer.DomainConcepts;
 using Sourcerer.DomainConcepts.Entities;
 using Sourcerer.DomainConcepts.Facts;
 using ThirdDrawer.Extensions.CollectionExtensionMethods;
+using ThirdDrawer.Extensions.StringExtensionMethods;
 using ThirdDrawer.Extensions.TypeExtensionMethods;
 
 namespace Sourcerer.Infrastructure
@@ -34,8 +36,14 @@ namespace Sourcerer.Infrastructure
                 .SelectMany(a => a.GetExportedTypes())
                 .Where(t => t.IsAssignableTo<IAggregateRoot>())
                 .Where(t => t.IsInstantiable())
+                .Do(AssertIsValidAggregateType)
                 .ToArray();
             return aggregateTypes;
+        }
+
+        private void AssertIsValidAggregateType(Type type)
+        {
+            if (type.GetCustomAttribute<SerializableAttribute>() == null) throw new Exception("Aggregate types must be marked as serializable. {0} is not.".FormatWith(type.FullName));
         }
 
         public Type[] FactTypes
@@ -49,9 +57,15 @@ namespace Sourcerer.Infrastructure
                 .SelectMany(a => a.GetExportedTypes())
                 .Where(t => t.IsAssignableTo<IFact>())
                 .Where(t => t.IsInstantiable())
+                .Do(AssertIsValidFactType)
                 .ToArray();
 
             return factTypes;
+        }
+
+        private void AssertIsValidFactType(Type type)
+        {
+            if (type.GetCustomAttribute<FactAttribute>() == null) throw new Exception("Fact types must be marked with a FactAttribute. {0} is not.".FormatWith(type.FullName));
         }
     }
 }
