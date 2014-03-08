@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Sourcerer.DomainConcepts.Entities;
 using Sourcerer.DomainConcepts.Facts;
 using Sourcerer.Infrastructure;
-using Sourcerer.Persistence;
 
 namespace Sourcerer.DomainConcepts.Queries
 {
@@ -17,6 +17,8 @@ namespace Sourcerer.DomainConcepts.Queries
 
         private readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, IAggregateRoot>> _items =
             new ConcurrentDictionary<Type, ConcurrentDictionary<Guid, IAggregateRoot>>();
+
+        private readonly ConcurrentDictionary<Guid, Guid> _lastSeenRevisionIds = new ConcurrentDictionary<Guid, Guid>();
 
         public QueryableSnapshot(IFactStore factStore, IAggregateRebuilder aggregateRebuilder)
         {
@@ -45,23 +47,49 @@ namespace Sourcerer.DomainConcepts.Queries
                          .AsQueryable();
         }
 
-        public void NotifyFactsWereCommitted(IEnumerable<IFact> facts)
+        public void NotifyAggregateRootsModified(IList<IAggregateRoot> aggregateRoots, IList<IFact> facts)
         {
-            //FIXME this needs a refactor - we're still rebuilding each aggregate every time someone
-            // tells us that it's changed.
-            foreach (var fact in facts)
+            var updatedIds = facts.Select(f => f.AggregateRootId).Distinct().ToArray();
+
+            foreach (var updatedId in updatedIds)
             {
-                var entityType = Type.GetType(fact.EntityTypeName);
+                var updated = aggregateRoots.Where(ar => ar.Id == updatedId).First();
+                var entityType = updated.GetType();
                 var items = GetItemDictionary(entityType);
-                var openGenericMethod = typeof (IAggregateRebuilder).GetMethod("Rebuild");
-                var closedGenericMethod = openGenericMethod.MakeGenericMethod(entityType);
+
+                IAggregateRoot existing;
+                IAggregateRoot replacement;
+
+                items.TryGetValue(updated.Id, out existing);
+                if (NeedsRebuild(existing, updated))
+                {
+                    var openGenericMethod = typeof (IAggregateRebuilder).GetMethod("Rebuild");
+                    var closedGenericMethod = openGenericMethod.MakeGenericMethod(entityType);
+                    replacement = (IAggregateRoot) closedGenericMethod.Invoke(_aggregateRebuilder, new object[] {updated.Id}); //FIXME make compile-time safe somehow
+                }
+                else
+                {
+                    replacement = updated;
+                }
 
                 lock (items)
                 {
-                    var item = (IAggregateRoot) closedGenericMethod.Invoke(_aggregateRebuilder, new object[] {fact.AggregateRootId}); //FIXME make compile-time safe somehow
-                    items[item.Id] = item;
+                    _lastSeenRevisionIds[updated.Id] = updated.RevisionId;
+                    items[replacement.Id] = replacement;
                 }
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool NeedsRebuild(IAggregateRoot existing, IAggregateRoot updated)
+        {
+            if (existing == null) return false;
+            if (existing.RevisionId == Guid.Empty) return false;
+
+            var lastSeenRevisionId = _lastSeenRevisionIds[updated.Id];
+            if (existing.RevisionId == lastSeenRevisionId) return false;
+
+            return true;
         }
 
         private ConcurrentDictionary<Guid, IAggregateRoot> GetItemDictionary(Type type)

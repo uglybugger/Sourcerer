@@ -49,7 +49,9 @@ namespace Sourcerer.DomainConcepts
         {
             //FIXME this isn't strictly correct. We're still querying against the snapshotted versions rather than the combined enlisted + remaining snapshotted ones
             return query.Execute(_snapshot.Items<T>())
-                        .Select(storedEntity => FindEnlistedEntityOrCloneSnapshottedEntity(storedEntity))
+                        .AsParallel()
+                        .AsOrdered()
+                        .Select(FindEnlistedEntityOrCloneSnapshottedEntity)
                         .ToArray();
         }
 

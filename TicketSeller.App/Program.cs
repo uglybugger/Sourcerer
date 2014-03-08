@@ -23,7 +23,7 @@ namespace TicketSeller.App
         {
             public void SellABunchOfTickets()
             {
-                var numCustomers = 1*1000;
+                var numCustomers = 10000;
 
                 var eventId = CreateANewEvent();
 

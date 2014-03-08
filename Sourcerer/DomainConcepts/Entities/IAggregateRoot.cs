@@ -8,6 +8,6 @@ namespace Sourcerer.DomainConcepts.Entities
     {
         Guid Id { get; }
         IEnumerable<IFact> GetAndClearPendingFacts();
-        long RevisionNumber { get; set; }
+        Guid RevisionId { get; set; }
     }
 }

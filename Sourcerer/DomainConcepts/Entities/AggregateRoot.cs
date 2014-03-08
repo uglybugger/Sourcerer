@@ -27,6 +27,6 @@ namespace Sourcerer.DomainConcepts.Entities
             }
         }
 
-        public long RevisionNumber { get; set; }
+        public Guid RevisionId { get; set; }
     }
 }

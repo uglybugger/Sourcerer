@@ -6,7 +6,6 @@ using Sourcerer.DomainConcepts.Facts;
 using Sourcerer.DomainConcepts.Queries;
 using Sourcerer.Infrastructure;
 using Sourcerer.Infrastructure.Time;
-using ThirdDrawer.Extensions;
 using ThirdDrawer.Extensions.CollectionExtensionMethods;
 
 namespace Sourcerer.DomainConcepts
@@ -43,6 +42,7 @@ namespace Sourcerer.DomainConcepts
         public void Commit()
         {
             var unitOfWorkId = Guid.NewGuid();
+            var sequenceNumber = 0;
 
             var facts = new List<IFact>();
             while (true)
@@ -54,7 +54,6 @@ namespace Sourcerer.DomainConcepts
                 if (factsFromThisPass.None()) break;
 
                 facts.AddRange(factsFromThisPass);
-                var sequenceNumber = 0;
                 foreach (var fact in factsFromThisPass)
                 {
                     fact.SetUnitOfWorkProperties(new UnitOfWorkProperties(unitOfWorkId, sequenceNumber, _clock.UtcNow));
@@ -64,8 +63,10 @@ namespace Sourcerer.DomainConcepts
                 }
             }
 
-            _factStore.AppendAtomically(facts.ToArray());
-            _snapshot.NotifyFactsWereCommitted(facts); //FIXME I don't like this at all.
+            var factsArray = facts.ToArray();
+            _factStore.AppendAtomically(factsArray);
+            _aggregateRootsInTransaction.Do(ar => ar.RevisionId = unitOfWorkId).Done();
+            _snapshot.NotifyAggregateRootsModified(_aggregateRootsInTransaction, factsArray);
         }
 
         public void Dispose()
