@@ -7,7 +7,6 @@ namespace Sourcerer.DomainConcepts
     public interface IRepository<T> where T : IAggregateRoot
     {
         T GetById(Guid id);
-        T TryGetById(Guid id);
         void Add(T item);
         void Remove(T item);
 

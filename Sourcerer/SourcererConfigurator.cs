@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Sourcerer.DomainConcepts.Queries;
 using Sourcerer.Infrastructure;
@@ -36,9 +38,8 @@ namespace Sourcerer
         public void Abracadabra()
         {
             var aggregateRebuilder = new AggregateRebuilder(FactStore);
-            var queryableSnapshot = new QueryableSnapshot(FactStore, aggregateRebuilder);
             var domainEventBroker = new DomainEventBroker(DependencyResolver);
-            SourcererFactory.Configure(FactStore, domainEventBroker, queryableSnapshot, Clock);
+            SourcererFactory.Configure(FactStore, domainEventBroker, Clock);
         }
     }
 }

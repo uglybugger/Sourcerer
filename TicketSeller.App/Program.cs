@@ -23,7 +23,7 @@ namespace TicketSeller.App
         {
             public void SellABunchOfTickets()
             {
-                var numCustomers = 10000;
+                var numCustomers = 1000;
 
                 var eventId = CreateANewEvent();
 
@@ -46,9 +46,9 @@ namespace TicketSeller.App
                 using (var unitOfWork = SourcererFactory.CreateUnitOfWork())
                 {
                     var eventRepository = SourcererFactory.CreateRepository<Event>(unitOfWork);
-                    var @event = Event.Create("Big Event", 100*1000);
+                    var @event = Event.Create("Big Event", 1000*1000);
                     eventRepository.Add(@event);
-                    unitOfWork.Commit();
+                    unitOfWork.Complete();
 
                     return @event.Id;
                 }
@@ -64,7 +64,7 @@ namespace TicketSeller.App
                     var customer = Customer.Create(customerName);
                     customerRepository.Add(customer);
 
-                    unitOfWork.Commit();
+                    unitOfWork.Complete();
 
                     //Console.WriteLine("Signed up {0}".FormatWith(customerName));
                     return customer.Id;
@@ -81,11 +81,11 @@ namespace TicketSeller.App
                     var customer = customerRepository.GetById(customerId);
                     var @event = eventRepository.GetById(eventId);
 
-                    var numTickets = 10;
+                    var numTickets = 1;
                     if (!customer.TryReserveTicketsFor(@event, numTickets)) throw new Exception("Failed to reserve tickets.");
 
                     //Console.WriteLine("Reserved {0} tickets for {1} to {2}".FormatWith(numTickets, customer.Name, @event.Name));
-                    unitOfWork.Commit();
+                    unitOfWork.Complete();
                 }
             }
         }

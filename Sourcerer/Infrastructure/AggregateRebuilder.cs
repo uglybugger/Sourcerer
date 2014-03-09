@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Sourcerer.DomainConcepts.Entities;
 
 namespace Sourcerer.Infrastructure
@@ -12,7 +13,7 @@ namespace Sourcerer.Infrastructure
             _factStore = factStore;
         }
 
-        public T Rebuild<T>(Guid id) where T : IAggregateRoot
+        public T Rebuild<T>(Guid id) where T : class, IAggregateRoot
         {
             var facts = _factStore.GetStream<T>(id);
             var aggregateRoot = (T) Activator.CreateInstance(typeof (T), true);
@@ -22,6 +23,15 @@ namespace Sourcerer.Infrastructure
             }
 
             return aggregateRoot;
+        }
+
+        public T[] RebuildAll<T>() where T : class, IAggregateRoot
+        {
+            var streamIds = _factStore.GetAllStreamIds<T>();
+            var aggregateRoots = streamIds
+                .Select(id => Rebuild<T>(id))
+                .ToArray();
+            return aggregateRoots;
         }
     }
 }

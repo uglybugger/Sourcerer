@@ -19,25 +19,25 @@ namespace Sourcerer.UnitTests.AggregateRebuilding
         {
             var factStore = new MemoryFactStore();
             var aggregateRebuilder = new AggregateRebuilder(factStore);
-            var queryableSnapshot = new QueryableSnapshot(factStore, aggregateRebuilder);
+            var snapshot = new Snapshot<Student>(aggregateRebuilder);
             var eventBroker = Substitute.For<IDomainEventBroker>();
 
             Guid studentId;
 
-            using (var unitOfWork = new UnitOfWork(factStore, eventBroker, queryableSnapshot, new SystemClock()))
+            using (var unitOfWork = new UnitOfWork(factStore, eventBroker, new SystemClock()))
             {
-                var repository = new Repository<Student>(unitOfWork, queryableSnapshot);
+                var repository = new Repository<Student>(snapshot, unitOfWork);
 
                 var student = Student.Create("Fred", "Flintstone");
                 studentId = student.Id;
                 repository.Add(student);
 
-                unitOfWork.Commit();
+                unitOfWork.Complete();
             }
 
-            using (var unitOfWork = new UnitOfWork(factStore, eventBroker, queryableSnapshot, new SystemClock()))
+            using (var unitOfWork = new UnitOfWork(factStore, eventBroker, new SystemClock()))
             {
-                var repository = new Repository<Student>(unitOfWork, queryableSnapshot);
+                var repository = new Repository<Student>(snapshot, unitOfWork);
                 var student = repository.GetById(studentId);
 
                 student.FirstName.ShouldBe("Fred");

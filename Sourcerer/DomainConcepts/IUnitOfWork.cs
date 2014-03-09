@@ -5,8 +5,12 @@ namespace Sourcerer.DomainConcepts
 {
     public interface IUnitOfWork : IDisposable
     {
-        T TryGetEnlistedAggregateRoot<T>(Guid id) where T : IAggregateRoot;
-        void EnlistInTransaction(IAggregateRoot item);
-        void Commit();
+        void Enlist(IAggregateRoot item);
+
+        EventHandler<EventArgs> Completed { get; set; }
+        void Complete();
+
+        EventHandler<EventArgs> Abandoned { get; set; }
+        void Abandon();
     }
 }
