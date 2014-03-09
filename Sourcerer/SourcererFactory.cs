@@ -34,9 +34,9 @@ namespace Sourcerer
             return new Repository<TAggregateRoot>(GetOrCreateSnapshot<TAggregateRoot>(), unitOfWork);
         }
 
-        private static ISnapshot<TAggregateRoot> GetOrCreateSnapshot<TAggregateRoot>() where TAggregateRoot : class, IAggregateRoot
+        private static IQueryModel<TAggregateRoot> GetOrCreateSnapshot<TAggregateRoot>() where TAggregateRoot : class, IAggregateRoot
         {
-            return (ISnapshot<TAggregateRoot>) _snapshots.GetOrAdd(typeof (TAggregateRoot), t => new Snapshot<TAggregateRoot>(_aggregateRebuilder));
+            return (IQueryModel<TAggregateRoot>) _snapshots.GetOrAdd(typeof (TAggregateRoot), t => new QueryModel<TAggregateRoot>(_aggregateRebuilder));
         }
     }
 }

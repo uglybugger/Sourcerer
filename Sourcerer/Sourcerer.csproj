@@ -73,11 +73,11 @@
     <Compile Include="Infrastructure\IFactStore.cs" />
     <Compile Include="Infrastructure\ITypesProvider.cs" />
     <Compile Include="DomainConcepts\Queries\IQuery.cs" />
-    <Compile Include="DomainConcepts\Queries\ISnapshot.cs" />
+    <Compile Include="DomainConcepts\Queries\IQueryModel.cs" />
     <Compile Include="DomainConcepts\IUnitOfWork.cs" />
     <Compile Include="Persistence\Memory\MemoryFactStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DomainConcepts\Queries\Snapshot.cs" />
+    <Compile Include="DomainConcepts\Queries\QueryModel.cs" />
     <Compile Include="DomainConcepts\Repository.cs" />
     <Compile Include="Persistence\Disk\SerializationWrapper.cs" />
     <Compile Include="DomainConcepts\UnitOfWork.cs" />

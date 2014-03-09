@@ -19,7 +19,7 @@ namespace Sourcerer.UnitTests.AggregateRebuilding
         {
             var factStore = new MemoryFactStore();
             var aggregateRebuilder = new AggregateRebuilder(factStore);
-            var snapshot = new Snapshot<Student>(aggregateRebuilder);
+            var snapshot = new QueryModel<Student>(aggregateRebuilder);
             var eventBroker = Substitute.For<IDomainEventBroker>();
 
             Guid studentId;

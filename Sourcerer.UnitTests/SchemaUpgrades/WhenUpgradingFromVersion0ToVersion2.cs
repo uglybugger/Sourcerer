@@ -30,8 +30,8 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
         private IDomainEventBroker _domainEventBroker;
         private SystemClock _systemClock;
         private AggregateRebuilder _aggregateRebuilderV2;
-        private Snapshot<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student> _studentSnapshotV2;
-        private Snapshot<Address> _addressSnapshotV2;
+        private QueryModel<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student> _studentQueryModelV2;
+        private QueryModel<Address> _addressQueryModelV2;
 
         protected override void Given()
         {
@@ -71,7 +71,7 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
             _factStoreFactory.GetFactStore(2).Returns(_factStoreV2);
 
             var aggregateRebuilderV0 = new AggregateRebuilder(_factStoreV0);
-            var studentSnapshotV0 = new Snapshot<Student>(aggregateRebuilderV0);
+            var studentSnapshotV0 = new QueryModel<Student>(aggregateRebuilderV0);
 
             // Create student in version 0 of schema
             using (var unitOfWork = new UnitOfWork(_factStoreV0, _domainEventBroker, _systemClock))
@@ -110,8 +110,8 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
                                                  _factStoreFactory
                 );
             _aggregateRebuilderV2 = new AggregateRebuilder(_factStoreV2);
-            _studentSnapshotV2 = new Snapshot<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_aggregateRebuilderV2);
-            _addressSnapshotV2 = new Snapshot<Address>(_aggregateRebuilderV2);
+            _studentQueryModelV2 = new QueryModel<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_aggregateRebuilderV2);
+            _addressQueryModelV2 = new QueryModel<Address>(_aggregateRebuilderV2);
         }
 
         protected override void When()
@@ -124,7 +124,7 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
         {
             using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _systemClock))
             {
-                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentSnapshotV2, unitOfWork);
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentQueryModelV2, unitOfWork);
                 var fred = studentRepository.GetById(_fredId);
                 fred.ShouldNotBe(null);
             }
@@ -135,7 +135,7 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
         {
             using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _systemClock))
             {
-                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentSnapshotV2, unitOfWork);
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentQueryModelV2, unitOfWork);
                 var fred = studentRepository.GetById(_fredId);
                 fred.GivenName.ShouldBe("Fred");
             }
@@ -146,7 +146,7 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
         {
             using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _systemClock))
             {
-                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentSnapshotV2, unitOfWork);
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentQueryModelV2, unitOfWork);
                 var fred = studentRepository.GetById(_fredId);
                 fred.FamilyName.ShouldBe("Flintstone");
             }
@@ -157,7 +157,7 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
         {
             using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _systemClock))
             {
-                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentSnapshotV2, unitOfWork);
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentQueryModelV2, unitOfWork);
                 var wilma = studentRepository.GetById(_wilmaId);
                 wilma.ShouldNotBe(null);
             }
@@ -168,7 +168,7 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
         {
             using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _systemClock))
             {
-                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentSnapshotV2, unitOfWork);
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentQueryModelV2, unitOfWork);
                 var wilma = studentRepository.GetById(_wilmaId);
                 wilma.GivenName.ShouldBe("Wilma");
             }
@@ -179,7 +179,7 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
         {
             using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _systemClock))
             {
-                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentSnapshotV2, unitOfWork);
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentQueryModelV2, unitOfWork);
                 var wilma = studentRepository.GetById(_wilmaId);
                 wilma.FamilyName.ShouldBe("Flintstone");
             }
@@ -190,8 +190,8 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
         {
             using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _systemClock))
             {
-                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentSnapshotV2, unitOfWork);
-                var addressRepository = new Repository<Address>(_addressSnapshotV2, unitOfWork);
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentQueryModelV2, unitOfWork);
+                var addressRepository = new Repository<Address>(_addressQueryModelV2, unitOfWork);
 
                 var fred = studentRepository.GetById(_fredId);
                 var fredAddress = addressRepository.GetById(fred.AddressId);
@@ -204,8 +204,8 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
         {
             using (var unitOfWork = new UnitOfWork(_factStoreV2, _domainEventBroker, _systemClock))
             {
-                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentSnapshotV2, unitOfWork);
-                var addressRepository = new Repository<Address>(_addressSnapshotV2, unitOfWork);
+                var studentRepository = new Repository<SchemaUpgradeTests.v2.Domain.StudentAggregate.Student>(_studentQueryModelV2, unitOfWork);
+                var addressRepository = new Repository<Address>(_addressQueryModelV2, unitOfWork);
 
                 var fred = studentRepository.GetById(_fredId);
                 var wilma = studentRepository.GetById(_wilmaId);

@@ -8,14 +8,14 @@ using Sourcerer.Infrastructure;
 
 namespace Sourcerer.DomainConcepts.Queries
 {
-    public class Snapshot<T> : ISnapshot<T> where T : class, IAggregateRoot
+    public class QueryModel<T> : IQueryModel<T> where T : class, IAggregateRoot
     {
         private readonly IAggregateRebuilder _aggregateRebuilder;
         private readonly Lazy<ConcurrentDictionary<Guid, T>> _items;
 
         private readonly ConcurrentDictionary<Guid, Guid> _lastSeenRevisionIds = new ConcurrentDictionary<Guid, Guid>();
 
-        public Snapshot(IAggregateRebuilder aggregateRebuilder)
+        public QueryModel(IAggregateRebuilder aggregateRebuilder)
         {
             _aggregateRebuilder = aggregateRebuilder;
             _items = new Lazy<ConcurrentDictionary<Guid, T>>(RebuildAll);

@@ -5,7 +5,7 @@ using Sourcerer.DomainConcepts.Entities;
 
 namespace Sourcerer.DomainConcepts.Queries
 {
-    public interface ISnapshot<T> where T : class, IAggregateRoot
+    public interface IQueryModel<T> where T : class, IAggregateRoot
     {
         T GetById(Guid id);
 
