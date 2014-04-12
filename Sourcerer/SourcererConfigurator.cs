@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Sourcerer.Infrastructure;
 using Sourcerer.Infrastructure.Time;
@@ -30,6 +31,12 @@ namespace Sourcerer
         public static SourcererConfigurator Configure()
         {
             return new SourcererConfigurator();
+        }
+
+        public SourcererConfigurator With(Action<SourcererConfigurator> setting)
+        {
+            setting(this);
+            return this;
         }
 
         public void Abracadabra()

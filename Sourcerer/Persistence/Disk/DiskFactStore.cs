@@ -19,7 +19,11 @@ namespace Sourcerer.Persistence.Disk
 
         private const string _filenameSuffix = "fact.xml";
 
-        public DiskFactStore(string factStoreDirectoryPath, ICustomSerializer serializer, ITypesProvider typesProvider)
+        public DiskFactStore(string factStoreDirectoryPath, ITypesProvider typesProvider) : this(factStoreDirectoryPath, new CustomXmlSerializer(typesProvider), typesProvider)
+        {
+        }
+
+        internal DiskFactStore(string factStoreDirectoryPath, ICustomSerializer serializer, ITypesProvider typesProvider)
         {
             _factStoreDirectoryPath = factStoreDirectoryPath;
             _serializer = serializer;
@@ -38,6 +42,7 @@ namespace Sourcerer.Persistence.Disk
             try
             {
                 factsAndFilenames
+                    .AsParallel()
                     .Do(kvp => WriteFactToDisk(kvp.Item2, kvp.Item1))
                     .Done();
             }

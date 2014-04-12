@@ -33,7 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -59,6 +67,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sourcerer.FactStore.SqlServer\Sourcerer.FactStore.SqlServer.csproj">
+      <Project>{629CF4C9-FE8D-4B92-8FD0-A0BBE2C2FC6A}</Project>
+      <Name>Sourcerer.FactStore.SqlServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sourcerer\Sourcerer.csproj">
       <Project>{8F4105F0-7A5F-4AA3-94B8-DFFDC955EC05}</Project>
       <Name>Sourcerer</Name>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer", "Sourcerer\Sourcerer.csproj", "{8F4105F0-7A5F-4AA3-94B8-DFFDC955EC05}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{626F6427-288C-484D-BEC9-E3863274F811}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketSeller.App", "TicketSeller.App\TicketSeller.App.csproj", "{CFEDFAB6-3C5A-4FB4-BAE8-48D9632E38A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourcerer.FactStore.SqlServer", "Sourcerer.FactStore.SqlServer\Sourcerer.FactStore.SqlServer.csproj", "{629CF4C9-FE8D-4B92-8FD0-A0BBE2C2FC6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{CFEDFAB6-3C5A-4FB4-BAE8-48D9632E38A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFEDFAB6-3C5A-4FB4-BAE8-48D9632E38A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFEDFAB6-3C5A-4FB4-BAE8-48D9632E38A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{629CF4C9-FE8D-4B92-8FD0-A0BBE2C2FC6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{629CF4C9-FE8D-4B92-8FD0-A0BBE2C2FC6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{629CF4C9-FE8D-4B92-8FD0-A0BBE2C2FC6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{629CF4C9-FE8D-4B92-8FD0-A0BBE2C2FC6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

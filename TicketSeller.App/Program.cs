@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Sourcerer;
+using Sourcerer.FactStore.SqlServer;
+using Sourcerer.Infrastructure;
+using Sourcerer.Persistence.Disk;
+using Sourcerer.Persistence.Memory;
 using ThirdDrawer.Extensions.CollectionExtensionMethods;
 using ThirdDrawer.Extensions.StringExtensionMethods;
 using TicketSeller.App.Domain.CustomerAggregate;
@@ -13,17 +18,29 @@ namespace TicketSeller.App
     {
         private static void Main(string[] args)
         {
-            SourcererConfigurator.Configure().Abracadabra();
+            var factStoreDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TicketSeller");
+            var typesProvider = new AssemblyScanningTypesProvider(new[] {typeof (Program).Assembly});
+            var diskFactStore = new DiskFactStore(factStoreDirectoryPath, typesProvider);
+
+            var sqlFactStore = SqlServerFactStore.Create(@"Server=.\SQLEXPRESS;Database=TicketSeller;Trusted_Connection=True;", typesProvider);
+
+            SourcererConfigurator.Configure()
+                                 //.With(c => c.FactStore = new MemoryFactStore())
+                                 //.With(c => c.FactStore = diskFactStore)
+                                 .With(c => c.FactStore = sqlFactStore)
+                                 .Abracadabra();
 
             var ticketSeller = new TicketSeller();
             ticketSeller.SellABunchOfTickets();
+
+            Directory.Delete(factStoreDirectoryPath);
         }
 
         public class TicketSeller
         {
             public void SellABunchOfTickets()
             {
-                var numIterations = 100*1000;
+                var numIterations = 1*1000;
 
                 var eventId = CreateANewEvent();
 
@@ -40,7 +57,7 @@ namespace TicketSeller.App
                 sw.Stop();
 
                 Console.WriteLine("{0} customers signed up and reserved tickets in {1} seconds", numIterations, sw.Elapsed.TotalSeconds);
-                Console.WriteLine("{0} ticket-reservation transactions per second", numIterations / sw.Elapsed.TotalSeconds);
+                Console.WriteLine("{0} ticket-reservation transactions per second", numIterations/sw.Elapsed.TotalSeconds);
 
                 var sw2 = Stopwatch.StartNew();
 
@@ -49,7 +66,7 @@ namespace TicketSeller.App
                           .Done();
 
                 sw2.Stop();
-                Console.WriteLine("{0} capacity-querying transactions per second", numIterations / sw2.Elapsed.TotalSeconds);
+                Console.WriteLine("{0} capacity-querying transactions per second", numIterations/sw2.Elapsed.TotalSeconds);
             }
 
             private Guid CreateANewEvent()
