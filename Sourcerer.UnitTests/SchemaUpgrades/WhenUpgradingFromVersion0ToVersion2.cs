@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
 using Sourcerer.DomainConcepts;
-using Sourcerer.DomainConcepts.Facts;
 using Sourcerer.DomainConcepts.Queries;
 using Sourcerer.Infrastructure;
 using Sourcerer.Infrastructure.Migrations;
 using Sourcerer.Infrastructure.Time;
 using Sourcerer.Persistence.Disk;
-using Sourcerer.Persistence.Memory;
 using Sourcerer.SchemaUpgradeTests.v0.Domain.StudentAggregate;
 using Sourcerer.SchemaUpgradeTests.v2.Domain.AddressAggregate;
 
@@ -215,41 +212,6 @@ namespace Sourcerer.UnitTests.SchemaUpgrades
 
                 fredAddress.Id.ShouldBe(wilmaAddress.Id);
             }
-        }
-    }
-
-    [TestFixture]
-    public abstract class TestFor<T>
-    {
-        protected abstract void Given();
-        protected abstract void When();
-
-        [SetUp]
-        public void SetUp()
-        {
-            Given();
-            When();
-        }
-    }
-
-    internal class TestHarnessMemoryFactStore : MemoryFactStore
-    {
-        private readonly CustomXmlSerializer _serializer;
-        private readonly CustomXmlSerializer _deserializer;
-
-        public TestHarnessMemoryFactStore(CustomXmlSerializer serializer, CustomXmlSerializer deserializer)
-        {
-            _serializer = serializer;
-            _deserializer = deserializer;
-        }
-
-        public override IEnumerable<IGrouping<Guid, IFact>> GetAllFactsGroupedByUnitOfWork()
-        {
-            return base.GetAllFactsGroupedByUnitOfWork()
-                       .SelectMany(uow => uow)
-                       .Select(fact => _serializer.Serialize(fact))
-                       .Select(xml => _deserializer.Deserialize<IFact>(xml))
-                       .GroupBy(fact => fact.UnitOfWorkProperties.UnitOfWorkId);
         }
     }
 }

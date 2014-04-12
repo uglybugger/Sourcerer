@@ -23,22 +23,24 @@ namespace TicketSeller.App
         {
             public void SellABunchOfTickets()
             {
-                var numCustomers = 1000;
+                var numCustomers = 100*1000;
 
                 var eventId = CreateANewEvent();
 
                 var sw = Stopwatch.StartNew();
 
                 Enumerable.Range(0, numCustomers)
-                          .Select(SignUpANewCustomer)
-                          .Do(customerId => ReserveATicketForCustomer(customerId, eventId))
+                          .Do(i =>
+                              {
+                                  var customerId = SignUpANewCustomer(i);
+                                  ReserveATicketForCustomer(customerId, eventId);
+                              })
                           .Done();
 
                 sw.Stop();
 
                 Console.WriteLine("{0} customers reserved tickets in {1} seconds", numCustomers, sw.Elapsed.TotalSeconds);
                 Console.WriteLine("{0} transactions per second", numCustomers/sw.Elapsed.TotalSeconds);
-                Console.ReadKey();
             }
 
             private Guid CreateANewEvent()

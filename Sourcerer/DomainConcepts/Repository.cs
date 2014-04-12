@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using Sourcerer.DomainConcepts.Entities;
 using Sourcerer.DomainConcepts.Queries;
@@ -11,9 +11,9 @@ namespace Sourcerer.DomainConcepts
     {
         private readonly IQueryModel<T> _queryModel;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ConcurrentDictionary<Guid, T> _newItems = new ConcurrentDictionary<Guid, T>();
-        private readonly ConcurrentDictionary<Guid, T> _modifiedItems = new ConcurrentDictionary<Guid, T>();
-        private readonly ConcurrentDictionary<Guid, T> _removedItems = new ConcurrentDictionary<Guid, T>();
+        private readonly HashSet<Guid> _addedItems = new HashSet<Guid>();
+        private readonly HashSet<Guid> _modifiedItems = new HashSet<Guid>();
+        private readonly HashSet<Guid> _removedItems = new HashSet<Guid>();
 
         public Repository(IQueryModel<T> queryModel, IUnitOfWork unitOfWork)
         {
@@ -25,8 +25,10 @@ namespace Sourcerer.DomainConcepts
 
         public T GetById(Guid id)
         {
-            var item = _modifiedItems.GetOrAdd(id, itemId => _queryModel.GetById(itemId).Clone<T>());
+            var item = _queryModel.GetById(id);
+
             _unitOfWork.Enlist(item);
+            _modifiedItems.Add(id);
             return item;
         }
 
@@ -35,46 +37,32 @@ namespace Sourcerer.DomainConcepts
             if (item.Id == Guid.Empty) throw new InvalidOperationException("Aggregate roots must have IDs assigned before being added to a repository.");
 
             _unitOfWork.Enlist(item);
-            _newItems[item.Id] = item;
+            _addedItems.Add(item.Id);
+            _queryModel.Add(item);
         }
 
         public void Remove(T item)
         {
             _unitOfWork.Enlist(item);
-            _removedItems[item.Id] = item;
+            _removedItems.Add(item.Id);
+            _queryModel.Remove(item);
         }
 
-        public T[] Query(IQuery<T> query)
+        public T[] Query(Func<IQueryable<T>, T[]> query)
         {
-            var fromUoW = query.Execute(_modifiedItems.Values.AsQueryable())
-                               .Except(_removedItems.Values);
-
-            var fromSnapshot = query.Execute(_queryModel.Items)
-                                    .Except(fromUoW)
-                                    .Except(_removedItems.Values)
-                                    .AsParallel()
-                                    .Select(item => item.Clone<T>())
-                ;
-
-            fromSnapshot.Do(item => _unitOfWork.Enlist(item)).Done();
-
-            // we re-execute in case there was an orderby clause
-            var results = query.Execute(fromUoW.Concat(fromSnapshot)).ToArray();
+            var results = query(_queryModel.Items);
+            results.Do(item => _unitOfWork.Enlist(item))
+                   .Done();
             return results;
-        }
-
-        public TProjection Query<TProjection>(IQuery<T, TProjection> query)
-        {
-            return query.Execute(_queryModel.Items);
         }
 
         private void OnUnitOfWorkCompleted(object sender, EventArgs e)
         {
-            _queryModel.UpdateAtomically(_newItems.Values, _modifiedItems.Values, _removedItems.Values);
         }
 
         private void OnUnitOfWorkAbandoned(object sender, EventArgs e)
         {
+            _queryModel.Revert(_addedItems, _modifiedItems, _removedItems);
         }
     }
 }

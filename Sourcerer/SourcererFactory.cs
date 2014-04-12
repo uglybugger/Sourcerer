@@ -8,6 +8,7 @@ using Sourcerer.Infrastructure.Time;
 
 namespace Sourcerer
 {
+    //FIXME make non-static.
     public static class SourcererFactory
     {
         private static IFactStore _factStore;
@@ -21,7 +22,7 @@ namespace Sourcerer
             _factStore = factStore;
             _domainEventBroker = domainEventBroker;
             _clock = clock;
-            _aggregateRebuilder = new AggregateRebuilder(factStore);    //FIXME extract
+            _aggregateRebuilder = new AggregateRebuilder(factStore); //FIXME extract
         }
 
         public static IUnitOfWork CreateUnitOfWork()
@@ -32,6 +33,11 @@ namespace Sourcerer
         public static IRepository<TAggregateRoot> CreateRepository<TAggregateRoot>(IUnitOfWork unitOfWork) where TAggregateRoot : class, IAggregateRoot
         {
             return new Repository<TAggregateRoot>(GetOrCreateSnapshot<TAggregateRoot>(), unitOfWork);
+        }
+
+        public static IQueryContext<TAggregateRoot> CreateQueryContext<TAggregateRoot>() where TAggregateRoot : class, IAggregateRoot
+        {
+            return new QueryContext<TAggregateRoot>(GetOrCreateSnapshot<TAggregateRoot>());
         }
 
         private static IQueryModel<TAggregateRoot> GetOrCreateSnapshot<TAggregateRoot>() where TAggregateRoot : class, IAggregateRoot

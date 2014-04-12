@@ -17,17 +17,25 @@ namespace Sourcerer.DomainConcepts
         private readonly IClock _clock;
         private bool _completed;
         private bool _abandoned;
+        private bool _disposed;
 
         public UnitOfWork(IFactStore factStore, IDomainEventBroker domainEventBroker, IClock clock)
         {
             _factStore = factStore;
             _domainEventBroker = domainEventBroker;
             _clock = clock;
+
+            DomainOperationMutex.Wait();
         }
 
         public void Enlist(IAggregateRoot item)
         {
             _enlistedItems.Add(item);
+        }
+
+        public IEnumerable<IAggregateRoot> EnlistedItems
+        {
+            get { return _enlistedItems; }
         }
 
         public EventHandler<EventArgs> Completed { get; set; }
@@ -84,14 +92,24 @@ namespace Sourcerer.DomainConcepts
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
             Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing) return;
+            if (_disposed) return;
 
-            if (!_completed) Abandon();
+            try
+            {
+                if (!_completed) Abandon();
+            }
+            finally
+            {
+                _disposed = true;
+                DomainOperationMutex.Release();
+            }
         }
     }
 }

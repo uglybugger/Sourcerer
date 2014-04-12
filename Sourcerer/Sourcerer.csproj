@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultDependencyResolver.cs" />
+    <Compile Include="DomainConcepts\DomainOperationMutex.cs" />
     <Compile Include="DomainConcepts\FactAttribute.cs" />
     <Compile Include="DomainConcepts\IRepository.cs" />
     <Compile Include="Infrastructure\AggregateRebuilder.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Infrastructure\OwnedComponent.cs" />
     <Compile Include="Infrastructure\Time\IClock.cs" />
     <Compile Include="Infrastructure\Time\SystemClock.cs" />
+    <Compile Include="DomainConcepts\Queries\IQueryContext.cs" />
     <Compile Include="Persistence\Disk\CustomXmlSerializer.cs" />
     <Compile Include="Persistence\Disk\DiskFactStore.cs" />
     <Compile Include="DomainConcepts\Entities\Entity.cs" />
@@ -72,7 +74,6 @@
     <Compile Include="DomainConcepts\Facts\IFact.cs" />
     <Compile Include="Infrastructure\IFactStore.cs" />
     <Compile Include="Infrastructure\ITypesProvider.cs" />
-    <Compile Include="DomainConcepts\Queries\IQuery.cs" />
     <Compile Include="DomainConcepts\Queries\IQueryModel.cs" />
     <Compile Include="DomainConcepts\IUnitOfWork.cs" />
     <Compile Include="Persistence\Memory\MemoryFactStore.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Persistence\Disk\SerializationWrapper.cs" />
     <Compile Include="DomainConcepts\UnitOfWork.cs" />
     <Compile Include="DomainConcepts\UnitOfWorkProperties.cs" />
+    <Compile Include="DomainConcepts\Queries\QueryContext.cs" />
     <Compile Include="SourcererConfigurator.cs" />
     <Compile Include="SourcererFactory.cs" />
   </ItemGroup>

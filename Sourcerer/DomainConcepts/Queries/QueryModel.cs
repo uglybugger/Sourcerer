@@ -2,9 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Sourcerer.DomainConcepts.Entities;
 using Sourcerer.Infrastructure;
+using ThirdDrawer.Extensions.CollectionExtensionMethods;
 
 namespace Sourcerer.DomainConcepts.Queries
 {
@@ -36,48 +36,34 @@ namespace Sourcerer.DomainConcepts.Queries
             get { return _items.Value.Values.AsQueryable(); }
         }
 
-        public void UpdateAtomically(IEnumerable<T> newItems, IEnumerable<T> modifiedItems, IEnumerable<T> removedItems)
+        public void Add(T item)
+        {
+            _items.Value.TryAdd(item.Id, item);
+        }
+
+        public void Remove(T item)
+        {
+            T dummy;
+            _items.Value.TryRemove(item.Id, out dummy);
+        }
+
+        public void Revert(IEnumerable<Guid> newItems, IEnumerable<Guid> modifiedItems, IEnumerable<Guid> removedItems)
 
         {
             lock (this)
             {
-                foreach (var item in newItems)
-                {
-                    _items.Value[item.Id] = item;
-                    _lastSeenRevisionIds[item.Id] = item.RevisionId;
-                }
+                T dummy;
+                newItems.AsParallel()
+                        .Do(id => _items.Value.TryRemove(id, out dummy))
+                        .Done();
 
-                foreach (var item in removedItems)
-                {
-                    T dummy;
-                    _items.Value.TryRemove(item.Id, out dummy);
-                }
-
-                foreach (var item in modifiedItems)
-                {
-                    T existing;
-                    _items.Value.TryGetValue(item.Id, out existing);
-
-                    var replacement = NeedsRebuild(existing, item)
-                        ? _aggregateRebuilder.Rebuild<T>(item.Id)
-                        : item;
-
-                    _lastSeenRevisionIds[item.Id] = item.RevisionId;
-                    _items.Value[replacement.Id] = replacement;
-                }
+                removedItems.Union(modifiedItems)
+                            .AsParallel()
+                            .Select(id => _aggregateRebuilder.Rebuild<T>(id))
+                            .Do(item => _items.Value[item.Id] = item)
+                            .Do(item => _lastSeenRevisionIds[item.Id] = item.RevisionId)
+                            .Done();
             }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool NeedsRebuild(IAggregateRoot existing, IAggregateRoot updated)
-        {
-            if (existing == null) return false;
-            if (existing.RevisionId == Guid.Empty) return false;
-
-            var lastSeenRevisionId = _lastSeenRevisionIds[updated.Id];
-            if (existing.RevisionId == lastSeenRevisionId) return false;
-
-            return true;
         }
     }
 }

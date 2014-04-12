@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Linq;
 using Sourcerer.DomainConcepts.Entities;
-using Sourcerer.DomainConcepts.Queries;
 
 namespace Sourcerer.DomainConcepts
 {
@@ -9,8 +9,6 @@ namespace Sourcerer.DomainConcepts
         T GetById(Guid id);
         void Add(T item);
         void Remove(T item);
-
-        T[] Query(IQuery<T> query);
-        TProjection Query<TProjection>(IQuery<T, TProjection> query);
+        T[] Query(Func<IQueryable<T>, T[]> query);
     }
 }

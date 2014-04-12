@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
-using Sourcerer.DomainConcepts.Queries;
 using Sourcerer.Infrastructure;
 using Sourcerer.Infrastructure.Time;
 using Sourcerer.Persistence.Memory;
@@ -27,7 +24,7 @@ namespace Sourcerer
 
         public ITypesProvider TypesProvider { get; set; }
         public IDependencyResolver DependencyResolver { get; set; }
-        public MemoryFactStore FactStore { get; set; }
+        public IFactStore FactStore { get; set; }
         public IClock Clock { get; set; }
 
         public static SourcererConfigurator Configure()
@@ -37,7 +34,6 @@ namespace Sourcerer
 
         public void Abracadabra()
         {
-            var aggregateRebuilder = new AggregateRebuilder(FactStore);
             var domainEventBroker = new DomainEventBroker(DependencyResolver);
             SourcererFactory.Configure(FactStore, domainEventBroker, Clock);
         }
