@@ -23,13 +23,13 @@ namespace TicketSeller.App
         {
             public void SellABunchOfTickets()
             {
-                var numCustomers = 100*1000;
+                var numIterations = 100*1000;
 
                 var eventId = CreateANewEvent();
 
                 var sw = Stopwatch.StartNew();
 
-                Enumerable.Range(0, numCustomers)
+                Enumerable.Range(0, numIterations)
                           .Do(i =>
                               {
                                   var customerId = SignUpANewCustomer(i);
@@ -39,8 +39,17 @@ namespace TicketSeller.App
 
                 sw.Stop();
 
-                Console.WriteLine("{0} customers reserved tickets in {1} seconds", numCustomers, sw.Elapsed.TotalSeconds);
-                Console.WriteLine("{0} transactions per second", numCustomers/sw.Elapsed.TotalSeconds);
+                Console.WriteLine("{0} customers reserved tickets in {1} seconds", numIterations, sw.Elapsed.TotalSeconds);
+                Console.WriteLine("{0} ticket-purchasing transactions per second", numIterations / sw.Elapsed.TotalSeconds);
+
+                var sw2 = Stopwatch.StartNew();
+
+                Enumerable.Range(0, numIterations)
+                          .Do(i => { var ticketsAvailable = QueryTicketsAvailableFor(eventId); })
+                          .Done();
+
+                sw2.Stop();
+                Console.WriteLine("{0} capacity-querying transactions per second", numIterations / sw2.Elapsed.TotalSeconds);
             }
 
             private Guid CreateANewEvent()
@@ -88,6 +97,20 @@ namespace TicketSeller.App
 
                     //Console.WriteLine("Reserved {0} tickets for {1} to {2}".FormatWith(numTickets, customer.Name, @event.Name));
                     unitOfWork.Complete();
+                }
+            }
+
+            private int QueryTicketsAvailableFor(Guid eventId)
+            {
+                using (var unitOfWork = SourcererFactory.CreateUnitOfWork())
+                {
+                    var eventRepository = SourcererFactory.CreateRepository<Event>(unitOfWork);
+                    var @event = eventRepository.GetById(eventId);
+
+                    var remainingTicketCount = @event.GetRemainingTicketCount();
+                    unitOfWork.Complete();
+
+                    return remainingTicketCount;
                 }
             }
         }

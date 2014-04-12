@@ -63,5 +63,10 @@ namespace TicketSeller.App.Domain.EventAggregate
             _ticketSales.Add(ticketSale);
             _ticketsSold += fact.NumTickets;
         }
+
+        public int GetRemainingTicketCount()
+        {
+            return Capacity - _ticketsSold;
+        }
     }
 }
