@@ -39,8 +39,8 @@ namespace TicketSeller.App
 
                 sw.Stop();
 
-                Console.WriteLine("{0} customers reserved tickets in {1} seconds", numIterations, sw.Elapsed.TotalSeconds);
-                Console.WriteLine("{0} ticket-purchasing transactions per second", numIterations / sw.Elapsed.TotalSeconds);
+                Console.WriteLine("{0} customers signed up and reserved tickets in {1} seconds", numIterations, sw.Elapsed.TotalSeconds);
+                Console.WriteLine("{0} ticket-reservation transactions per second", numIterations / sw.Elapsed.TotalSeconds);
 
                 var sw2 = Stopwatch.StartNew();
 
