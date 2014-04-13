@@ -47,23 +47,36 @@ namespace Sourcerer.DomainConcepts.Queries
             _items.Value.TryRemove(item.Id, out dummy);
         }
 
-        public void Revert(IEnumerable<Guid> newItems, IEnumerable<Guid> modifiedItems, IEnumerable<Guid> removedItems)
+        public void Revert(IEnumerable<T> newItems, IEnumerable<T> modifiedItems, IEnumerable<T> removedItems)
 
         {
             lock (this)
             {
                 T dummy;
                 newItems.AsParallel()
-                        .Do(id => _items.Value.TryRemove(id, out dummy))
+                        .Do(item => _items.Value.TryRemove(item.Id, out dummy))
                         .Done();
 
-                removedItems.Union(modifiedItems)
-                            .AsParallel()
-                            .Select(id => _aggregateRebuilder.Rebuild<T>(id))
-                            .Do(item => _items.Value[item.Id] = item)
-                            .Do(item => _lastSeenRevisionIds[item.Id] = item.RevisionId)
-                            .Done();
+                var actuaModifiedItems = modifiedItems
+                    .Where(item => item.RevisionId != LastSeenRevisionId(item.Id))
+                    .ToArray();
+
+                var itemsToRebuild = removedItems.Union(actuaModifiedItems);
+
+                itemsToRebuild
+                    .AsParallel()
+                    .Select(itemToRebuild => _aggregateRebuilder.Rebuild<T>(itemToRebuild.Id))
+                    .Do(item => _items.Value[item.Id] = item)
+                    .Do(item => _lastSeenRevisionIds[item.Id] = item.RevisionId)
+                    .Done();
             }
+        }
+
+        private Guid LastSeenRevisionId(Guid itemId)
+        {
+            Guid lastSeenRevisionId;
+            _lastSeenRevisionIds.TryGetValue(itemId, out lastSeenRevisionId);
+            return lastSeenRevisionId;
         }
     }
 }

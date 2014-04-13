@@ -11,9 +11,9 @@ namespace Sourcerer.DomainConcepts
     {
         private readonly IQueryModel<T> _queryModel;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly HashSet<Guid> _addedItems = new HashSet<Guid>();
-        private readonly HashSet<Guid> _modifiedItems = new HashSet<Guid>();
-        private readonly HashSet<Guid> _removedItems = new HashSet<Guid>();
+        private readonly HashSet<T> _addedItems = new HashSet<T>();
+        private readonly HashSet<T> _modifiedItems = new HashSet<T>();
+        private readonly HashSet<T> _removedItems = new HashSet<T>();
 
         public Repository(IQueryModel<T> queryModel, IUnitOfWork unitOfWork)
         {
@@ -28,7 +28,7 @@ namespace Sourcerer.DomainConcepts
             var item = _queryModel.GetById(id);
 
             _unitOfWork.Enlist(item);
-            _modifiedItems.Add(id);
+            _modifiedItems.Add(item);
             return item;
         }
 
@@ -37,14 +37,14 @@ namespace Sourcerer.DomainConcepts
             if (item.Id == Guid.Empty) throw new InvalidOperationException("Aggregate roots must have IDs assigned before being added to a repository.");
 
             _unitOfWork.Enlist(item);
-            _addedItems.Add(item.Id);
+            _addedItems.Add(item);
             _queryModel.Add(item);
         }
 
         public void Remove(T item)
         {
             _unitOfWork.Enlist(item);
-            _removedItems.Add(item.Id);
+            _removedItems.Add(item);
             _queryModel.Remove(item);
         }
 

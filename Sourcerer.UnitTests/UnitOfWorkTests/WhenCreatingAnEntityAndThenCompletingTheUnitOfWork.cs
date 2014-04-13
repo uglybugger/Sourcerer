@@ -11,13 +11,13 @@ namespace Sourcerer.UnitTests.UnitOfWorkTests
         [Test]
         public void ThatEntityShouldExist()
         {
-            SourcererConfigurator.Configure().Abracadabra();
+            var sourcerFactory = SourcererConfigurator.Configure().Abracadabra();
 
             Guid fredId;
 
-            using (var unitOfWork = SourcererFactory.CreateUnitOfWork())
+            using (var unitOfWork = sourcerFactory.CreateUnitOfWork())
             {
-                var studentRepository = SourcererFactory.CreateRepository<Student>(unitOfWork);
+                var studentRepository = sourcerFactory.CreateRepository<Student>(unitOfWork);
 
                 var fred = Student.Create("Fred", "Flintstone");
                 fredId = fred.Id;
@@ -26,9 +26,9 @@ namespace Sourcerer.UnitTests.UnitOfWorkTests
                 unitOfWork.Complete();
             }
 
-            using (var unitOfWork = SourcererFactory.CreateUnitOfWork())
+            using (var unitOfWork = sourcerFactory.CreateUnitOfWork())
             {
-                var studentRepository = SourcererFactory.CreateRepository<Student>(unitOfWork);
+                var studentRepository = sourcerFactory.CreateRepository<Student>(unitOfWork);
                 var fred = studentRepository.GetById(fredId);
                 fred.ShouldNotBe(null);
             }

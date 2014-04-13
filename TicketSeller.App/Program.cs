@@ -6,7 +6,6 @@ using Sourcerer;
 using Sourcerer.FactStore.SqlServer;
 using Sourcerer.Infrastructure;
 using Sourcerer.Persistence.Disk;
-using Sourcerer.Persistence.Memory;
 using ThirdDrawer.Extensions.CollectionExtensionMethods;
 using ThirdDrawer.Extensions.StringExtensionMethods;
 using TicketSeller.App.Domain.CustomerAggregate;
@@ -16,6 +15,8 @@ namespace TicketSeller.App
 {
     internal class Program
     {
+        private static SourcererFactory _sourcererFactory;
+
         private static void Main(string[] args)
         {
             var factStoreDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TicketSeller");
@@ -24,11 +25,11 @@ namespace TicketSeller.App
 
             var sqlFactStore = SqlServerFactStore.Create(@"Server=.\SQLEXPRESS;Database=TicketSeller;Trusted_Connection=True;", typesProvider);
 
-            SourcererConfigurator.Configure()
-                                 //.With(c => c.FactStore = new MemoryFactStore())
-                                 //.With(c => c.FactStore = diskFactStore)
-                                 .With(c => c.FactStore = sqlFactStore)
-                                 .Abracadabra();
+            _sourcererFactory = SourcererConfigurator.Configure()
+                //.With(c => c.FactStore = new MemoryFactStore())
+                //.With(c => c.FactStore = diskFactStore)
+                                                     .With(c => c.FactStore = sqlFactStore)
+                                                     .Abracadabra();
 
             var ticketSeller = new TicketSeller();
             ticketSeller.SellABunchOfTickets();
@@ -71,9 +72,9 @@ namespace TicketSeller.App
 
             private Guid CreateANewEvent()
             {
-                using (var unitOfWork = SourcererFactory.CreateUnitOfWork())
+                using (var unitOfWork = _sourcererFactory.CreateUnitOfWork())
                 {
-                    var eventRepository = SourcererFactory.CreateRepository<Event>(unitOfWork);
+                    var eventRepository = _sourcererFactory.CreateRepository<Event>(unitOfWork);
                     var @event = Event.Create("Big Event", 1000*1000);
                     eventRepository.Add(@event);
                     unitOfWork.Complete();
@@ -84,9 +85,9 @@ namespace TicketSeller.App
 
             private Guid SignUpANewCustomer(int customerNumber)
             {
-                using (var unitOfWork = SourcererFactory.CreateUnitOfWork())
+                using (var unitOfWork = _sourcererFactory.CreateUnitOfWork())
                 {
-                    var customerRepository = SourcererFactory.CreateRepository<Customer>(unitOfWork);
+                    var customerRepository = _sourcererFactory.CreateRepository<Customer>(unitOfWork);
 
                     var customerName = "Customer_{0:00}".FormatWith(customerNumber);
                     var customer = Customer.Create(customerName);
@@ -101,10 +102,10 @@ namespace TicketSeller.App
 
             private void ReserveATicketForCustomer(Guid customerId, Guid eventId)
             {
-                using (var unitOfWork = SourcererFactory.CreateUnitOfWork())
+                using (var unitOfWork = _sourcererFactory.CreateUnitOfWork())
                 {
-                    var customerRepository = SourcererFactory.CreateRepository<Customer>(unitOfWork);
-                    var eventRepository = SourcererFactory.CreateRepository<Event>(unitOfWork);
+                    var customerRepository = _sourcererFactory.CreateRepository<Customer>(unitOfWork);
+                    var eventRepository = _sourcererFactory.CreateRepository<Event>(unitOfWork);
 
                     var customer = customerRepository.GetById(customerId);
                     var @event = eventRepository.GetById(eventId);
@@ -119,9 +120,9 @@ namespace TicketSeller.App
 
             private int QueryTicketsAvailableFor(Guid eventId)
             {
-                using (var unitOfWork = SourcererFactory.CreateUnitOfWork())
+                using (var unitOfWork = _sourcererFactory.CreateUnitOfWork())
                 {
-                    var eventRepository = SourcererFactory.CreateRepository<Event>(unitOfWork);
+                    var eventRepository = _sourcererFactory.CreateRepository<Event>(unitOfWork);
                     var @event = eventRepository.GetById(eventId);
 
                     var remainingTicketCount = @event.GetRemainingTicketCount();

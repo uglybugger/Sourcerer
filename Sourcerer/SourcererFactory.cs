@@ -8,16 +8,15 @@ using Sourcerer.Infrastructure.Time;
 
 namespace Sourcerer
 {
-    //FIXME make non-static.
-    public static class SourcererFactory
+    public class SourcererFactory
     {
-        private static IFactStore _factStore;
-        private static IDomainEventBroker _domainEventBroker;
-        private static IClock _clock;
-        private static readonly ConcurrentDictionary<Type, object> _snapshots = new ConcurrentDictionary<Type, object>();
-        private static IAggregateRebuilder _aggregateRebuilder;
+        private readonly IFactStore _factStore;
+        private readonly IDomainEventBroker _domainEventBroker;
+        private readonly IClock _clock;
+        private readonly ConcurrentDictionary<Type, object> _snapshots = new ConcurrentDictionary<Type, object>();
+        private readonly IAggregateRebuilder _aggregateRebuilder;
 
-        internal static void Configure(IFactStore factStore, IDomainEventBroker domainEventBroker, IClock clock)
+        internal SourcererFactory(IFactStore factStore, IDomainEventBroker domainEventBroker, IClock clock)
         {
             _factStore = factStore;
             _domainEventBroker = domainEventBroker;
@@ -25,22 +24,22 @@ namespace Sourcerer
             _aggregateRebuilder = new AggregateRebuilder(factStore); //FIXME extract
         }
 
-        public static IUnitOfWork CreateUnitOfWork()
+        public IUnitOfWork CreateUnitOfWork()
         {
             return new UnitOfWork(_factStore, _domainEventBroker, _clock);
         }
 
-        public static IRepository<TAggregateRoot> CreateRepository<TAggregateRoot>(IUnitOfWork unitOfWork) where TAggregateRoot : class, IAggregateRoot
+        public IRepository<TAggregateRoot> CreateRepository<TAggregateRoot>(IUnitOfWork unitOfWork) where TAggregateRoot : class, IAggregateRoot
         {
             return new Repository<TAggregateRoot>(GetOrCreateSnapshot<TAggregateRoot>(), unitOfWork);
         }
 
-        public static IQueryContext<TAggregateRoot> CreateQueryContext<TAggregateRoot>() where TAggregateRoot : class, IAggregateRoot
+        public IQueryContext<TAggregateRoot> CreateQueryContext<TAggregateRoot>() where TAggregateRoot : class, IAggregateRoot
         {
             return new QueryContext<TAggregateRoot>(GetOrCreateSnapshot<TAggregateRoot>());
         }
 
-        private static IQueryModel<TAggregateRoot> GetOrCreateSnapshot<TAggregateRoot>() where TAggregateRoot : class, IAggregateRoot
+        private IQueryModel<TAggregateRoot> GetOrCreateSnapshot<TAggregateRoot>() where TAggregateRoot : class, IAggregateRoot
         {
             return (IQueryModel<TAggregateRoot>) _snapshots.GetOrAdd(typeof (TAggregateRoot), t => new QueryModel<TAggregateRoot>(_aggregateRebuilder));
         }

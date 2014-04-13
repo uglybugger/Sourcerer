@@ -39,10 +39,10 @@ namespace Sourcerer
             return this;
         }
 
-        public void Abracadabra()
+        public SourcererFactory Abracadabra()
         {
             var domainEventBroker = new DomainEventBroker(DependencyResolver);
-            SourcererFactory.Configure(FactStore, domainEventBroker, Clock);
+            return new SourcererFactory(FactStore, domainEventBroker, Clock);
         }
     }
 }

@@ -12,6 +12,6 @@ namespace Sourcerer.DomainConcepts.Queries
 
         void Add(T item);
         void Remove(T item);
-        void Revert(IEnumerable<Guid> newItems, IEnumerable<Guid> modifiedItems, IEnumerable<Guid> removedItems);
+        void Revert(IEnumerable<T> newItems, IEnumerable<T> modifiedItems, IEnumerable<T> removedItems);
     }
 }
