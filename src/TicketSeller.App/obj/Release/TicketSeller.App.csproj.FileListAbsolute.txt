@@ -1,0 +1,9 @@
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Release\TicketSeller.App.exe.config
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Release\TicketSeller.App.exe
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Release\TicketSeller.App.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Release\Sourcerer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Release\ThirdDrawer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Release\Sourcerer.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\obj\Release\TicketSeller.App.csprojResolveAssemblyReference.cache
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\obj\Release\TicketSeller.App.exe
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\obj\Release\TicketSeller.App.pdb

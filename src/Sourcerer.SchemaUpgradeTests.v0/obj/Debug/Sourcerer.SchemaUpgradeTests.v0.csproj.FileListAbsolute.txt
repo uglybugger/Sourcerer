@@ -1,0 +1,8 @@
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.SchemaUpgradeTests.v0\bin\Debug\Sourcerer.SchemaUpgradeTests.v0.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.SchemaUpgradeTests.v0\bin\Debug\Sourcerer.SchemaUpgradeTests.v0.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.SchemaUpgradeTests.v0\bin\Debug\Sourcerer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.SchemaUpgradeTests.v0\bin\Debug\ThirdDrawer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.SchemaUpgradeTests.v0\bin\Debug\Sourcerer.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.SchemaUpgradeTests.v0\obj\Debug\Sourcerer.SchemaUpgradeTests.v0.csprojResolveAssemblyReference.cache
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.SchemaUpgradeTests.v0\obj\Debug\Sourcerer.SchemaUpgradeTests.v0.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.SchemaUpgradeTests.v0\obj\Debug\Sourcerer.SchemaUpgradeTests.v0.pdb

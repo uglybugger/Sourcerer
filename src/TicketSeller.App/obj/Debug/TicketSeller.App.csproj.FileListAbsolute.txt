@@ -1,0 +1,15 @@
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\obj\Debug\TicketSeller.App.csprojResolveAssemblyReference.cache
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\TicketSeller.App.exe.config
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\TicketSeller.App.exe
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\TicketSeller.App.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\Sourcerer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\ThirdDrawer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\Sourcerer.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\obj\Debug\TicketSeller.App.exe
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\obj\Debug\TicketSeller.App.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\Sourcerer.FactStore.SqlServer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\EntityFramework.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\Sourcerer.FactStore.SqlServer.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\EntityFramework.xml
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\TicketSeller.App\bin\Debug\EntityFramework.SqlServer.xml

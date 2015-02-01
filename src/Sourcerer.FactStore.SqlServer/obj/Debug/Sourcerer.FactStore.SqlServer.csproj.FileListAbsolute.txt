@@ -1,0 +1,15 @@
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\obj\Debug\Sourcerer.FactStore.SqlServer.csprojResolveAssemblyReference.cache
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\bin\Debug\Sourcerer.FactStore.SqlServer.dll.config
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\bin\Debug\Sourcerer.FactStore.SqlServer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\bin\Debug\Sourcerer.FactStore.SqlServer.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\bin\Debug\EntityFramework.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\bin\Debug\Sourcerer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\bin\Debug\ThirdDrawer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\bin\Debug\Sourcerer.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\bin\Debug\EntityFramework.xml
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\obj\Debug\Sourcerer.FactStore.SqlServer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\obj\Debug\Sourcerer.FactStore.SqlServer.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\obj\Debug\Sourcerer.FactStore.SqlServer.Migrations.HelloWorld.resources
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer.FactStore.SqlServer\obj\Debug\Sourcerer.FactStore.SqlServer.csproj.GenerateResource.Cache

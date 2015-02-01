@@ -1,0 +1,6 @@
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer\bin\Release\Sourcerer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer\bin\Release\Sourcerer.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer\bin\Release\ThirdDrawer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer\obj\Release\Sourcerer.dll
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer\obj\Release\Sourcerer.pdb
+C:\Users\andrewh\Code\Mine\Sourcerer\Sourcerer\obj\Release\Sourcerer.csprojResolveAssemblyReference.cache
